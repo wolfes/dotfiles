@@ -46,7 +46,9 @@ set shiftwidth=4
 autocmd BufWinEnter *.html setlocal tabstop=2
 autocmd BufWinEnter *.html setlocal expandtab
 autocmd BufWinEnter *.html setlocal shiftwidth=2
-autocmd BufWinEnter *.html setlocal expandtab
+
+" Except JS - 2 spaces
+autocmd BufWinEnter *.js setlocal expandtab
 
 " highlight trailing whitespace and non-tab indents
 autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
