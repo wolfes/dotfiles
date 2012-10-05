@@ -138,7 +138,7 @@ map <F9> :!/usr/bin/ctags -L <(find . -name '*.py') --fields=+iaS --python-kinds
 
 " Leader shortcuts
 map <Leader>v :tabe ~/.vimrc<CR>
-map <Leader>e :tabe 
+map <Leader>e :tabe
 map <Leader>E :e <C-R>=expand('%:p:h') . '/'<CR>
 " open current buffer in new tab
 map <Leader>s :tab split<CR>
@@ -155,7 +155,7 @@ map <Leader>z :cp<CR>
 map <Leader>x :cn<CR>
 " git diff in new tab
 map <Leader>f :tab split<CR>:Gdiff canon/master<CR>
-map <Leader>g :tab split<CR>:Ggrep 
+map <Leader>g :tab split<CR>:Ggrep
 " commit log for current file
 map <Leader>o :Glog -- %<CR>:copen<CR>
 map <Leader>i Oimport pdb; pdb.set_trace()<ESC>
@@ -166,7 +166,7 @@ map <Leader>b :CommandTBuffer<CR>
 
 " ---------- yelp stuff ---------
 
-if(match(hostname(), 'dev20') >= 0)
+if(match(hostname(), 'dev26') >= 0)
 	map <Leader>r :!cd ~/pg/yelp-main/templates && make && cd ~/pg/yelp-main/mobile_templates && make -f ../templates/Makefile<CR>
 	set wildignore+=build/**,templates/*.py*,mobile_templates/*.py*,biz_templates/*.py*,admin_templates/*.py*,lite_templates/*.py*
 	autocmd BufEnter *.css.tmpl setlocal filetype=css
