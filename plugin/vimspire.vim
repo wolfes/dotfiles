@@ -60,7 +60,7 @@ execute "nnoremap"  g:vimspire_map_prefix."d"  ":call <sid>vimspireDelete()<CR>"
 " User Defined Function
 
 function! UserDefined()
-	"wa
+	wa
 	silent! exec "r!ping -c 1 www.google.com"
 	u
 endfunction
@@ -119,7 +119,7 @@ EOF
 endfunction
 
 command! -nargs=* OpenTabByName call OpenTabByName ( '<args>' )
-map <Leader>m :OpenTabByName
+map <Leader>m :OpenTabByName 
 "command C -nargs=* call F ( <f-args> )
 
 
