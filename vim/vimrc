@@ -138,18 +138,30 @@ map <F1> <nop>
 map <F3> :set hlsearch! hlsearch?<CR>
 map <F6> :NERDTreeClose<CR>
 map <F7> :NERDTreeFind<CR> "TODO combine with F6 to make toggle
-map <F8> :TagbarToggle<cr>
+map tt :TagbarToggle<cr>
 map <F9> :!/usr/bin/ctags -L <(find . -name '*.py') --fields=+iaS --python-kinds=-i --sort=yes --extra=+q<cr>
 
 " Leader shortcuts
+
+map <Leader>1 :tabnext 1<CR>
+map <Leader>2 :tabnext 2<CR>
+map <Leader>3 :tabnext 3<CR>
+map <Leader>4 :tabnext 4<CR>
+map <Leader>5 :tabnext 5<CR>
+map <Leader>6 :tabnext 6<CR>
+map <Leader>7 :tabnext 7<CR>
+map <Leader>8 :tabnext 8<CR>
+map <Leader>9 :tabnext 9<CR>
+
 map <Leader>v :tabe ~/.vimrc<CR>
 map <Leader>e :tabe
 map <Leader>E :e <C-R>=expand('%:p:h') . '/'<CR>
 " open current buffer in new tab
 map <Leader>s :tab split<CR>
+map <Leader>T :tabnew<CR>:CommandT<CR>
 map <Leader>n :tabnew<CR>
 map <Leader>Q :tabc<CR>
-map <Leader>m :tabm
+"map <Leader>m :tabm
 map <Leader>w :w<CR>
 map <Leader>q :q<CR>
 map <Leader>l :lclose<CR>
@@ -163,7 +175,7 @@ map <Leader>f :tab split<CR>:Gdiff canon/master<CR>
 map <Leader>g :tab split<CR>:Ggrep
 " commit log for current file
 map <Leader>o :Glog -- %<CR>:copen<CR>
-map <Leader>i Oimport pdb; pdb.set_trace()<ESC>
+map <Leader>i Oimport ipdb; ipdb.set_trace()<ESC>
 map <Leader>I Oimport pudb; pudb.set_trace()<ESC>
 " these are already set by Command-T, but let's be explicit
 map <Leader>t :CommandT<CR>
