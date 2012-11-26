@@ -9,3 +9,5 @@ before vimspire.
 Open documentation to help you out,
 check out the change you just made,
 or keep up to date with all reddit.
+
+1

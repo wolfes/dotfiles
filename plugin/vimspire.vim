@@ -57,71 +57,53 @@ execute "nnoremap"  g:vimspire_map_prefix."d"  ":call <sid>vimspireDelete()<CR>"
 "
 
 
-" User Defined Function
-
-function! UserDefined()
+" User Defined Function for saving all tabs
+" and rebuilding templates, etc...
+function! SaveAndRebuild()
 	wa
+	" Replace with build templates script.
 	silent! exec "r!ping -c 1 www.google.com"
 	u
 endfunction
 
 
-
-" Vim comments start with a double quote.
-" Function definition is VimL. We can mix VimL and Python in
-" function definition.
 function! OpenTabByName(name)
-:	call UserDefined()
+" Sends request to nspire.it to ask the user's
+" chrome extension to open a tab by the specified name.
+" Saves tabs and rebuilds anything user specifies first.
 
-" We start the python code like the next line.
+:	call SaveAndRebuild()
+
 
 python << EOF
-# the vim module contains everything we need to interface with vim from
-# python. We need urllib2 for the web service consumer.
-import vim, urllib, urllib2
-# we need json for parsing the response
-import json
+import json, urllib, urllib2, vim
 
-# we define a timeout that we'll use in the API call. We don't want
-# users to wait much.
 TIMEOUT = 20
-#URL = "http://localhost:3000/api/0/tabspire/thespicemustflow/openTabByName"
-URL = "http://192.155.82.253:3000/api/0/tabspire/thespicemustflow/openTabByName"
+BASE_URL = "http://nspire.it:3000/api/0/"
+TABSPIRE_OPEN_URL = "tabspire/thespicemustflow/openTabByName"
 
 try:
 	# Get the posts and parse the json response
-	#response = urllib2.urlopen(URL, None, TIMEOUT).read()
-	#json_response = json.loads(response)
-
 	post_params = {
 		'tabName' : vim.eval('a:name')
 	}
 	params = urllib.urlencode(post_params)
-	response = urllib2.urlopen(URL, params)
+	response = urllib2.urlopen(BASE_URL + TABSPIRE_OPEN_URL, params)
 	#json_response = json.loads(response.read())
-
 	# posts = json_response.get("data", "").get("children", "")
-
-    # vim.current.buffer is the current buffer. It's list-like object.
-    # each line is an item in the list. We can loop through them delete
-    # them, alter them etc.
-    # Here we delete all lines in the current buffer
-	#del vim.current.buffer[:]
-    # Here we append some lines above. Aesthetics.
-	#vim.current.buffer[0] = 80*"-"
-	#	vim.current.buffer.append(response)
+	# vim.current.buffer.append(response)
 
 except Exception, e:
     print e
 
 EOF
-" Here the python code is closed. We can continue writing VimL or python again.
 endfunction
 
+" Create command OpenTabByName that accepts arguments.
 command! -nargs=* OpenTabByName call OpenTabByName ( '<args>' )
+" TODO(wstyke:11-25-2012) Move this to let the user
+" create in user-defined .vimrc file.
 map <Leader>m :OpenTabByName 
-"command C -nargs=* call F ( <f-args> )
-
 
 
 " ====================================================================
