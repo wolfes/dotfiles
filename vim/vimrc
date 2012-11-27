@@ -122,69 +122,74 @@ autocmd BufEnter *.mako setlocal filetype=html
 " ---------- mappings ---------
 
 " Typos and things I don't want to do
-nmap Q <ESC>
-nmap :Q :q
-nmap :W :w
-nmap :WQ :wq
+nnoremap Q <ESC>
+nnoremap :Q :q
+nnoremap :W :w
+nnoremap :WQ :wq
 
 " Windows
-map <C-J> <C-W>j
-map <C-K> <C-W>k
-map <C-H> <C-W>h
-map <C-L> <C-W>l
+noremap <C-J> <C-W>j
+noremap <C-K> <C-W>k
+noremap <C-H> <C-W>h
+noremap <C-L> <C-W>l
+
+" Util move curr line down/up
+nnoremap - ddp
+nnoremap _ ddkP
 
 " Function key shortcuts
-map <F1> <nop>
-map <F3> :set hlsearch! hlsearch?<CR>
-map <F6> :NERDTreeClose<CR>
-map <F7> :NERDTreeFind<CR> "TODO combine with F6 to make toggle
-map tt :TagbarToggle<cr>
-map <F9> :!/usr/bin/ctags -L <(find . -name '*.py') --fields=+iaS --python-kinds=-i --sort=yes --extra=+q<cr>
+noremap <F1> <nop>
+noremap <F3> :set hlsearch! hlsearch?<CR>
+noremap <F6> :NERDTreeClose<CR>
+noremap <F7> :NERDTreeFind<CR> "TODO combine with F6 to make toggle
+noremap tt :TagbarToggle<cr>
+noremap <F9> :!/usr/bin/ctags -L <(find . -name '*.py') --fields=+iaS --python-kinds=-i --sort=yes --extra=+q<cr>
 
 " Leader shortcuts
+nnoremap <Leader>1 :tabnext 1<CR>
+nnoremap <Leader>2 :tabnext 2<CR>
+nnoremap <Leader>3 :tabnext 3<CR>
+nnoremap <Leader>4 :tabnext 4<CR>
+nnoremap <Leader>5 :tabnext 5<CR>
+nnoremap <Leader>6 :tabnext 6<CR>
+nnoremap <Leader>7 :tabnext 7<CR>
+nnoremap <Leader>8 :tabnext 8<CR>
+nnoremap <Leader>9 :tabnext 9<CR>
 
-map <Leader>1 :tabnext 1<CR>
-map <Leader>2 :tabnext 2<CR>
-map <Leader>3 :tabnext 3<CR>
-map <Leader>4 :tabnext 4<CR>
-map <Leader>5 :tabnext 5<CR>
-map <Leader>6 :tabnext 6<CR>
-map <Leader>7 :tabnext 7<CR>
-map <Leader>8 :tabnext 8<CR>
-map <Leader>9 :tabnext 9<CR>
 
-map <Leader>v :tabe ~/.vimrc<CR>
-map <Leader>e :tabe
-map <Leader>E :e <C-R>=expand('%:p:h') . '/'<CR>
+nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <Leader>v :tabe ~/.vimrc<CR>
+nnoremap <Leader>e :tabe
+nnoremap <Leader>E :e <C-R>=expand('%:p:h') . '/'<CR>
 " open current buffer in new tab
-map <Leader>s :tab split<CR>
-map <Leader>T :tabnew<CR>:CommandT<CR>
-map <Leader>n :tabnew<CR>
-map <Leader>Q :tabc<CR>
+nnoremap <Leader>s :tab split<CR>
+nnoremap <Leader>T :tabnew<CR>:CommandT<CR>
+nnoremap <Leader>n :tabnew<CR>
+nnoremap <Leader>Q :tabc<CR>
 "map <Leader>m :tabm
-map <Leader>w :w<CR>
-map <Leader>q :q<CR>
-map <Leader>l :lclose<CR>
-map <Leader>L :lopen<CR>
-map <Leader>c :copen<CR>
-map <Leader>C :cclose<CR>
-map <Leader>z :cp<CR>
-map <Leader>x :cn<CR>
+nnoremap <Leader>w :w<CR>
+nnoremap <Leader>q :q<CR>
+nnoremap <Leader>l :lclose<CR>
+nnoremap <Leader>L :lopen<CR>
+nnoremap <Leader>c :copen<CR>
+nnoremap <Leader>C :cclose<CR>
+nnoremap <Leader>z :cp<CR>
+nnoremap <Leader>x :cn<CR>
 " git diff in new tab
-map <Leader>f :tab split<CR>:Gdiff canon/master<CR>
-map <Leader>g :tab split<CR>:Ggrep
+nnoremap <Leader>f :tab split<CR>:Gdiff canon/master<CR>
+nnoremap <Leader>g :tab split<CR>:Ggrep
 " commit log for current file
-map <Leader>o :Glog -- %<CR>:copen<CR>
-map <Leader>i Oimport ipdb; ipdb.set_trace()<ESC>
-map <Leader>I Oimport pudb; pudb.set_trace()<ESC>
+nnoremap <Leader>o :Glog -- %<CR>:copen<CR>
+nnoremap <Leader>i Oimport ipdb; ipdb.set_trace()<ESC>
+nnoremap <Leader>I Oimport pudb; pudb.set_trace()<ESC>
 " these are already set by Command-T, but let's be explicit
-map <Leader>t :CommandT<CR>
-map <Leader>b :CommandTBuffer<CR>
+nnoremap <Leader>t :CommandT<CR>
+nnoremap <Leader>b :CommandTBuffer<CR>
 
 " ---------- yelp stuff ---------
 
 if(match(hostname(), 'dev26') >= 0)
-	map <Leader>r :!cd ~/pg/yelp-main/templates && make && cd ~/pg/yelp-main/mobile_templates && make -f ../templates/Makefile<CR>
+	nnoremap <Leader>r :!cd ~/pg/yelp-main/templates && make && cd ~/pg/yelp-main/mobile_templates && make -f ../templates/Makefile<CR>
 	set wildignore+=build/**,templates/*.py*,mobile_templates/*.py*,biz_templates/*.py*,admin_templates/*.py*,lite_templates/*.py*
 	autocmd BufEnter *.css.tmpl setlocal filetype=css
 	autocmd BufEnter *.js.tmpl setlocal filetype=javascript
