@@ -74,12 +74,11 @@ function! OpenTabByName(name)
 
 :	call SaveAndRebuild()
 
-
 python << EOF
 import json, urllib, urllib2, vim
 
 TIMEOUT = 20
-BASE_URL = "http://nspire.it:3000/api/0/"
+BASE_URL = "http://cmdsync:3000/api/0/"
 TABSPIRE_OPEN_URL = "tabspire/thespicemustflow/openTabByName"
 
 try:
@@ -103,7 +102,7 @@ endfunction
 command! -nargs=* OpenTabByName call OpenTabByName ( '<args>' )
 " TODO(wstyke:11-25-2012) Move this to let the user
 " create in user-defined .vimrc file.
-map <Leader>m :OpenTabByName 
+noremap <Leader>m :OpenTabByName 
 
 
 " ====================================================================
