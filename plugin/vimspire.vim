@@ -99,12 +99,50 @@ except Exception, e:
 EOF
 endfunction
 
+function! OpenGoogleSearch(query)
+" Sends request to nspire.it to ask the user's
+" chrome extension to open a tab by the specified name.
+" Saves tabs and rebuilds anything user specifies first.
+
+:	call SaveAndRebuild()
+
+python << EOF
+import json, urllib, urllib2, vim
+
+TIMEOUT = 20
+CLIENT_ID = "PUT_YOUR_TABSPIRE_CLIENT_ID_HERE" # No '/' allowed.
+#BASE_URL = "http://localhost:3000/api/0/"
+BASE_URL = "http://cmdsync.com:3000/api/0/"
+TABSPIRE_OPEN_URL = "tabspire/" + CLIENT_ID + "/openGoogleSearch"
+
+try:
+	# Get the posts and parse the json response
+	post_params = {
+		'query' : vim.eval('a:query')
+	}
+	params = urllib.urlencode(post_params)
+	response = urllib2.urlopen(BASE_URL + TABSPIRE_OPEN_URL, params)
+	#json_response = json.loads(response.read())
+	# posts = json_response.get("data", "").get("children", "")
+	#vim.current.buffer.append(vim.eval('a:query'))
+
+except Exception, e:
+    print e
+
+EOF
+endfunction
+
 " Create command OpenTabByName that accepts arguments.
 command! -nargs=* OpenTabByName call OpenTabByName ( '<args>' )
 " TODO(wstyke:11-25-2012) Move this to let the user
 " create in user-defined .vimrc file.
 noremap <Leader>m :OpenTabByName 
 
+" Create command OpenTabByName that accepts arguments.
+command! -nargs=* OpenGoogleSearch call OpenGoogleSearch ( '<args>' )
+" TODO(wstyke:11-25-2012) Move this to let the user
+" create in user-defined .vimrc file.
+noremap <Leader>m :OpenGoogleSearch 
 
 " ====================================================================
 let &cpo= s:keepcpo
