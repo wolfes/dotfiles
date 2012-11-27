@@ -78,8 +78,9 @@ python << EOF
 import json, urllib, urllib2, vim
 
 TIMEOUT = 20
+CLIENT_ID = "PUT_YOUR_TABSPIRE_CLIENT_ID_HERE" # No '/' allowed.
 BASE_URL = "http://cmdsync.com:3000/api/0/"
-TABSPIRE_OPEN_URL = "tabspire/thespicemustflow/openTabByName"
+TABSPIRE_OPEN_URL = "tabspire/" + CLIENT_ID + "/openTabByName"
 
 try:
 	# Get the posts and parse the json response
