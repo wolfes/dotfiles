@@ -142,7 +142,7 @@ noremap <Leader>m :OpenTabByName
 command! -nargs=* OpenGoogleSearch call OpenGoogleSearch ( '<args>' )
 " TODO(wstyke:11-25-2012) Move this to let the user
 " create in user-defined .vimrc file.
-noremap <Leader>m :OpenGoogleSearch 
+noremap <Leader>k :OpenGoogleSearch 
 
 " ====================================================================
 let &cpo= s:keepcpo
