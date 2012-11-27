@@ -78,7 +78,7 @@ python << EOF
 import json, urllib, urllib2, vim
 
 TIMEOUT = 20
-BASE_URL = "http://cmdsync:3000/api/0/"
+BASE_URL = "http://cmdsync.com:3000/api/0/"
 TABSPIRE_OPEN_URL = "tabspire/thespicemustflow/openTabByName"
 
 try:
