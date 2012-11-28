@@ -145,6 +145,10 @@ noremap <C-L> <C-W>l
 " Util move curr line down/up
 nnoremap - ddp
 nnoremap _ ddkP
+" mocement [p]arams <-- [i]nside parenthesis
+onoremap p i(
+onoremap in( :<c-u>normal! f(vi(<cr>
+onoremap il( :<c-u>normal! F)vi(<cr>
 
 " Function key shortcuts
 noremap <F1> <nop>
