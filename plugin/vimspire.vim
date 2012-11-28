@@ -111,8 +111,8 @@ import json, urllib, urllib2, vim
 
 TIMEOUT = 20
 CLIENT_ID = "PUT_YOUR_TABSPIRE_CLIENT_ID_HERE" # No '/' allowed.
-#BASE_URL = "http://localhost:3000/api/0/"
 BASE_URL = "http://cmdsync.com:3000/api/0/"
+BASE_URL_LOCAL = "http://localhost:3000/api/0/"
 TABSPIRE_OPEN_URL = "tabspire/" + CLIENT_ID + "/openGoogleSearch"
 
 try:
@@ -121,7 +121,8 @@ try:
 		'query' : vim.eval('a:query')
 	}
 	params = urllib.urlencode(post_params)
-	response = urllib2.urlopen(BASE_URL + TABSPIRE_OPEN_URL, params)
+	resp_cmd = urllib2.urlopen(BASE_URL + TABSPIRE_OPEN_URL, params)
+	resp_loc = urllib2.urlopen(BASE_URL_LOCAL + TABSPIRE_OPEN_URL, params)
 	#json_response = json.loads(response.read())
 	# posts = json_response.get("data", "").get("children", "")
 	#vim.current.buffer.append(vim.eval('a:query'))
