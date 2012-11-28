@@ -45,18 +45,24 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 
-" Except HTML - 2 spaces
-autocmd BufWinEnter *.html setlocal tabstop=2
-autocmd BufWinEnter *.html setlocal expandtab
-autocmd BufWinEnter *.html setlocal shiftwidth=2
+augroup indent_defaults
+	autocmd!
+	" Except HTML - 2 spaces
+	autocmd BufWinEnter *.html setlocal tabstop=2
+	autocmd BufWinEnter *.html setlocal expandtab
+	autocmd BufWinEnter *.html setlocal shiftwidth=2
+	" Except JS - 2 spaces
+	autocmd BufWinEnter *.js setlocal expandtab
+augroup END
 
-" Except JS - 2 spaces
-autocmd BufWinEnter *.js setlocal expandtab
 
 " highlight trailing whitespace and non-tab indents
-autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
-autocmd BufWinEnter *.* match ExtraWhitespace /\s\+$/
-autocmd BufWinLeave * call clearmatches()
+augroup highlight_whitespace
+	autocmd!
+	autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+	autocmd BufWinEnter *.* match ExtraWhitespace /\s\+$/
+	autocmd BufWinLeave * call clearmatches()
+augroup END
 
 " Color scheme and font
 colorscheme xoria256
@@ -117,7 +123,10 @@ set splitright
 set tags+=./.tags,.tags,../.tags,../../.tags
 
 " Filetypes
-autocmd BufEnter *.mako setlocal filetype=html
+augroup filetype_mako
+	autocmd!
+	autocmd BufEnter *.mako setlocal filetype=html
+augroup END
 
 " ---------- mappings ---------
 
@@ -191,6 +200,9 @@ nnoremap <Leader>b :CommandTBuffer<CR>
 if(match(hostname(), 'dev26') >= 0)
 	nnoremap <Leader>r :!cd ~/pg/yelp-main/templates && make && cd ~/pg/yelp-main/mobile_templates && make -f ../templates/Makefile<CR>
 	set wildignore+=build/**,templates/*.py*,mobile_templates/*.py*,biz_templates/*.py*,admin_templates/*.py*,lite_templates/*.py*
-	autocmd BufEnter *.css.tmpl setlocal filetype=css
-	autocmd BufEnter *.js.tmpl setlocal filetype=javascript
+	augroup filetype_template
+		autocmd!
+		autocmd BufEnter *.css.tmpl setlocal filetype=css
+		autocmd BufEnter *.js.tmpl setlocal filetype=javascript
+	augroup END
 endif
