@@ -66,7 +66,6 @@ function! SaveAndRebuild()
 	u
 endfunction
 
-
 function! OpenTabByName(name)
 " Sends request to nspire.it to ask the user's
 " chrome extension to open a tab by the specified name.
@@ -133,17 +132,100 @@ except Exception, e:
 EOF
 endfunction
 
+function! OpenURL(url)
+:	call SaveAndRebuild()
+
+python << EOF
+import json, urllib, urllib2, vim
+
+TIMEOUT = 20
+CLIENT_ID = "PUT_YOUR_TABSPIRE_CLIENT_ID_HERE" # No '/' allowed.
+BASE_URL = "http://cmdsync.com:3000/api/0/"
+BASE_URL_LOCAL = "http://localhost:3000/api/0/"
+TABSPIRE_OPEN_URL = "tabspire/" + CLIENT_ID + "/openURL"
+
+try:
+	# Get the posts and parse the json response
+	post_params = {
+		'url' : vim.eval('a:url')
+	}
+	params = urllib.urlencode(post_params)
+#	resp_cmd = urllib2.urlopen(BASE_URL + TABSPIRE_OPEN_URL, params)
+	resp_loc = urllib2.urlopen(BASE_URL_LOCAL + TABSPIRE_OPEN_URL, params)
+	#json_response = json.loads(response.read())
+	# posts = json_response.get("data", "").get("children", "")
+	#vim.current.buffer.append(vim.eval('a:query'))
+
+except Exception, e:
+    print e
+
+EOF
+endfunction
+
+
+function! OpenSelectedURL(foobar)
+:	call SaveAndRebuild()
+
+python << EOF
+import json, urllib, urllib2, vim
+
+TIMEOUT = 20
+CLIENT_ID = "PUT_YOUR_TABSPIRE_CLIENT_ID_HERE" # No '/' allowed.
+BASE_URL = "http://cmdsync.com:3000/api/0/"
+BASE_URL_LOCAL = "http://localhost:3000/api/0/"
+TABSPIRE_OPEN_URL = "tabspire/" + CLIENT_ID + "/openURL"
+
+try:
+#	def getVisualArea():
+#		startCol=int(vim.eval("""col("'<")"""))-1
+#	    endCol=int(vim.eval("""col("'>")"""))+1
+#	    startLine=int(vim.eval("""line("'<")"""))
+#		endLine=int(vim.eval("""line("'>")"""))
+#	    return [startCol,endCol,startLine,endLine]
+
+#	startCol,endCol,startLine,endLine=getVisualArea()
+	vim_buffer = vim.current.buffer
+	text_on_current_line = vim.current.line
+
+	# Get the posts and parse the json response
+	post_params = {
+		'url' : text_on_current_line
+	}
+	params = urllib.urlencode(post_params)
+#	resp_cmd = urllib2.urlopen(BASE_URL + TABSPIRE_OPEN_URL, params)
+	resp_loc = urllib2.urlopen(BASE_URL_LOCAL + TABSPIRE_OPEN_URL, params)
+	#json_response = json.loads(response.read())
+	# posts = json_response.get("data", "").get("children", "")
+	#vim.current.buffer.append(vim.eval('a:query'))
+
+except Exception, e:
+    print e
+
+EOF
+endfunction
+
+
+
+
 " Create command OpenTabByName that accepts arguments.
 command! -nargs=* OpenTabByName call OpenTabByName ( '<args>' )
 " TODO(wstyke:11-25-2012) Move this to let the user
 " create in user-defined .vimrc file.
 noremap <Leader>m :OpenTabByName 
 
-" Create command OpenTabByName that accepts arguments.
+" Create command OpenGoogleSearch that accepts arguments.
 command! -nargs=* OpenGoogleSearch call OpenGoogleSearch ( '<args>' )
 " TODO(wstyke:11-25-2012) Move this to let the user
 " create in user-defined .vimrc file.
 noremap <Leader>k :OpenGoogleSearch 
+
+" Create command OpenURL that accepts arguments.
+command! -nargs=* OpenURL call OpenURL ( '<args>' )
+noremap <Leader>u :OpenURL 
+
+" Create command OpenURL that accepts arguments.
+command! -nargs=* OpenSelectedURL call OpenSelectedURL ( '<args>' )
+noremap <Leader>U :OpenSelectedURL<CR>
 
 " ====================================================================
 let &cpo= s:keepcpo
