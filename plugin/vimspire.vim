@@ -32,21 +32,27 @@ set cpo&vim
 
 
 if !exists('g:vimspire_map_keys')
-    let g:vimspire_map_keys = 1
+	" Let vimspire map commands to keys with noremap.
+	let g:vimspire_map_keys = 1
 endif
 
-if g:vimspire_map_keys
-	nnoremap <leader>d :call <sid>vimspireDelete()<CR>
+
+if !exists("g:tabspire_client_id")
+	" Your tabspire client id, which you set from tabspire.
+    let g:tabspire_client_id = "PUT_YOUR_TABSPIRE_CLIENT_ID_HERE"
 endif
 
+if !exists("g:cmdsync_url")
+	" The server to use to sync commands to Tabspire.
+	"let g:cmdsync_url = "http://cmdsync.com:3000/api/0/"
+	let g:cmdsync_url = "http://localhost:3000/api/0/"
+endif
 
 if !exists('g:vimspire_map_prefix')
-    let g:vimspire_map_prefix = '<leader>'
+	" Unused, example of how to map commands to plugin-prefix.
+    let g:vimspire_map_prefix = '<Leader>'
 endif
-
-execute "nnoremap"  g:vimspire_map_prefix."d"  ":call <sid>vimspireDelete()<CR>"
-
-
+" execute "nnoremap"  g:vimspire_map_prefix."d"  ":call <sid>vimspireDelete()<CR>"
 
 " Features (Idea List)
 "
@@ -54,16 +60,12 @@ execute "nnoremap"  g:vimspire_map_prefix."d"  ":call <sid>vimspireDelete()<CR>"
 " - by name.
 " - Set default tab name to reload when
 "    saving (performing 'save/waf' cmd) for this file.
-"
 
-
-" User Defined Function for saving all tabs
-" and rebuilding templates, etc...
 function! SaveAndRebuild()
 	wa
 	" Replace with build templates script.
-	silent! exec "r!ping -c 1 www.google.com"
-	u
+	" silent! exec "r!ping -c 1 www.google.com"
+	" u
 endfunction
 
 function! OpenTabByName(name)
@@ -74,23 +76,16 @@ function! OpenTabByName(name)
 :	call SaveAndRebuild()
 
 python << EOF
-import json, urllib, urllib2, vim
+import urllib, urllib2, vim
 
-TIMEOUT = 20
-CLIENT_ID = "PUT_YOUR_TABSPIRE_CLIENT_ID_HERE" # No '/' allowed.
-BASE_URL = "http://cmdsync.com:3000/api/0/"
-TABSPIRE_OPEN_URL = "tabspire/" + CLIENT_ID + "/openTabByName"
+request_url = (vim.eval('g:cmdsync_url') + "tabspire/" +
+		vim.eval('g:tabspire_client_id') + "/openTabByName")
 
 try:
-	# Get the posts and parse the json response
-	post_params = {
+	params = urllib.urlencode({
 		'tabName' : vim.eval('a:name')
-	}
-	params = urllib.urlencode(post_params)
-	response = urllib2.urlopen(BASE_URL + TABSPIRE_OPEN_URL, params)
-	#json_response = json.loads(response.read())
-	# posts = json_response.get("data", "").get("children", "")
-	# vim.current.buffer.append(response)
+	})
+	response = urllib2.urlopen(request_url, params)
 
 except Exception, e:
     print e
@@ -99,133 +94,85 @@ EOF
 endfunction
 
 function! OpenGoogleSearch(query)
-" Sends request to nspire.it to ask the user's
-" chrome extension to open a tab by the specified name.
-" Saves tabs and rebuilds anything user specifies first.
-
-:	call SaveAndRebuild()
+" Sends request to tabspire thru cmdSync
+" to open a google search for the query.
 
 python << EOF
-import json, urllib, urllib2, vim
-
-TIMEOUT = 20
-CLIENT_ID = "PUT_YOUR_TABSPIRE_CLIENT_ID_HERE" # No '/' allowed.
-BASE_URL = "http://cmdsync.com:3000/api/0/"
-BASE_URL_LOCAL = "http://localhost:3000/api/0/"
-TABSPIRE_OPEN_URL = "tabspire/" + CLIENT_ID + "/openGoogleSearch"
-
+import urllib, urllib2, vim
+request_url = (vim.eval('g:cmdsync_url') + "tabspire/" +
+		vim.eval('g:tabspire_client_id') + "/openTabByName")
 try:
-	# Get the posts and parse the json response
-	post_params = {
+	params = urllib.urlencode({
 		'query' : vim.eval('a:query')
-	}
-	params = urllib.urlencode(post_params)
-	resp_cmd = urllib2.urlopen(BASE_URL + TABSPIRE_OPEN_URL, params)
-	resp_loc = urllib2.urlopen(BASE_URL_LOCAL + TABSPIRE_OPEN_URL, params)
-	#json_response = json.loads(response.read())
-	# posts = json_response.get("data", "").get("children", "")
-	#vim.current.buffer.append(vim.eval('a:query'))
-
+	})
+	response = urllib2.urlopen(request_url, params)
 except Exception, e:
     print e
-
 EOF
 endfunction
 
 function! OpenURL(url)
+" Sends request to Tabspire thru cmdSync
+" to open a url in a new tab.
+
 :	call SaveAndRebuild()
 
 python << EOF
-import json, urllib, urllib2, vim
-
-TIMEOUT = 20
-CLIENT_ID = "PUT_YOUR_TABSPIRE_CLIENT_ID_HERE" # No '/' allowed.
-BASE_URL = "http://cmdsync.com:3000/api/0/"
-BASE_URL_LOCAL = "http://localhost:3000/api/0/"
-TABSPIRE_OPEN_URL = "tabspire/" + CLIENT_ID + "/openURL"
-
+import urllib, urllib2, vim
+request_url = (vim.eval('g:cmdsync_url') + "tabspire/" +
+		vim.eval('g:tabspire_client_id') + "/openURL")
 try:
-	# Get the posts and parse the json response
-	post_params = {
+	params = urllib.urlencode({
 		'url' : vim.eval('a:url')
-	}
-	params = urllib.urlencode(post_params)
-#	resp_cmd = urllib2.urlopen(BASE_URL + TABSPIRE_OPEN_URL, params)
-	resp_loc = urllib2.urlopen(BASE_URL_LOCAL + TABSPIRE_OPEN_URL, params)
-	#json_response = json.loads(response.read())
-	# posts = json_response.get("data", "").get("children", "")
-	#vim.current.buffer.append(vim.eval('a:query'))
-
+	})
+	resp_loc = urllib2.urlopen(request_url, params)
 except Exception, e:
     print e
-
 EOF
 endfunction
 
 
-function! OpenSelectedURL(foobar)
-:	call SaveAndRebuild()
+function! OpenSelectedURL()
+" Sends req to Tabspire thru cmdSync
+" to open the current buffer's selected line as a url.
 
 python << EOF
-import json, urllib, urllib2, vim
-
-TIMEOUT = 20
-CLIENT_ID = "PUT_YOUR_TABSPIRE_CLIENT_ID_HERE" # No '/' allowed.
-BASE_URL = "http://cmdsync.com:3000/api/0/"
-BASE_URL_LOCAL = "http://localhost:3000/api/0/"
-TABSPIRE_OPEN_URL = "tabspire/" + CLIENT_ID + "/openURL"
-
+import urllib, urllib2, vim
+request_url = (vim.eval('g:cmdsync_url') + "tabspire/" +
+		vim.eval('g:tabspire_client_id') + "/openURL")
 try:
-#	def getVisualArea():
-#		startCol=int(vim.eval("""col("'<")"""))-1
-#	    endCol=int(vim.eval("""col("'>")"""))+1
-#	    startLine=int(vim.eval("""line("'<")"""))
-#		endLine=int(vim.eval("""line("'>")"""))
-#	    return [startCol,endCol,startLine,endLine]
-
-#	startCol,endCol,startLine,endLine=getVisualArea()
-	vim_buffer = vim.current.buffer
-	text_on_current_line = vim.current.line
-
-	# Get the posts and parse the json response
-	post_params = {
-		'url' : text_on_current_line
-	}
-	params = urllib.urlencode(post_params)
-#	resp_cmd = urllib2.urlopen(BASE_URL + TABSPIRE_OPEN_URL, params)
-	resp_loc = urllib2.urlopen(BASE_URL_LOCAL + TABSPIRE_OPEN_URL, params)
-	#json_response = json.loads(response.read())
-	# posts = json_response.get("data", "").get("children", "")
-	#vim.current.buffer.append(vim.eval('a:query'))
-
+	params = urllib.urlencode({
+		'url' : vim.current.line
+	})
+	resp_cmd = urllib2.urlopen(request_url, params)
 except Exception, e:
     print e
-
 EOF
 endfunction
 
 
+" Create command OpenTabByName: exactly 1 tabname.
+command! -nargs=1 OpenTabByName call OpenTabByName ( '<args>' )
+
+" Create command OpenGoogleSearch: 1+ search terms.
+command! -nargs=+ OpenGoogleSearch call OpenGoogleSearch ( '<args>' )
+
+" Create command OpenURL: exactly 1 url.
+command! -nargs=1 OpenURL call OpenURL ( '<args>' )
+
+" Create command OpenSelectedURL: no args.
+command! -nargs=0 OpenSelectedURL call OpenSelectedURL ( )
 
 
-" Create command OpenTabByName that accepts arguments.
-command! -nargs=* OpenTabByName call OpenTabByName ( '<args>' )
-" TODO(wstyke:11-25-2012) Move this to let the user
-" create in user-defined .vimrc file.
-noremap <Leader>m :OpenTabByName 
+if g:vimspire_map_keys
+	nnoremap <leader>d :call <sid>vimspireDelete()<CR>
 
-" Create command OpenGoogleSearch that accepts arguments.
-command! -nargs=* OpenGoogleSearch call OpenGoogleSearch ( '<args>' )
-" TODO(wstyke:11-25-2012) Move this to let the user
-" create in user-defined .vimrc file.
-noremap <Leader>k :OpenGoogleSearch 
+	noremap <Leader>m :OpenTabByName 
+	noremap <Leader>k :OpenGoogleSearch 
+	noremap <Leader>u :OpenURL 
+	noremap <Leader>U :OpenSelectedURL<CR>
+endif
 
-" Create command OpenURL that accepts arguments.
-command! -nargs=* OpenURL call OpenURL ( '<args>' )
-noremap <Leader>u :OpenURL 
-
-" Create command OpenURL that accepts arguments.
-command! -nargs=* OpenSelectedURL call OpenSelectedURL ( '<args>' )
-noremap <Leader>U :OpenSelectedURL<CR>
 
 " ====================================================================
 let &cpo= s:keepcpo
