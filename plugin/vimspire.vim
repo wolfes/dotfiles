@@ -150,6 +150,26 @@ except Exception, e:
 EOF
 endfunction
 
+function! OpenPB()
+" Sends req to Tabspire thru cmdSync
+" to open the current buffer's selected line as a url.
+:	!pb
+python << EOF
+import urllib, urllib2, vim
+request_url = (vim.eval('g:cmdsync_url') + "tabspire/" +
+		vim.eval('g:tabspire_client_id') + "/openURL")
+try:
+	params = urllib.urlencode({
+		'url' : vim.current.line
+	})
+	resp_cmd = urllib2.urlopen(request_url, params)
+except Exception, e:
+    print e
+EOF
+" Undo pastebin insertion of url.
+:	normal! u
+endfunction
+
 
 " Create command OpenTabByName: exactly 1 tabname.
 command! -nargs=1 OpenTabByName call OpenTabByName ( '<args>' )
@@ -163,6 +183,8 @@ command! -nargs=1 OpenURL call OpenURL ( '<args>' )
 " Create command OpenSelectedURL: no args.
 command! -nargs=0 OpenSelectedURL call OpenSelectedURL ( )
 
+" Create command OpenPB: no args.
+command! -nargs=0 OpenPB call OpenPB ( )
 
 if g:vimspire_map_keys
 	nnoremap <leader>d :call <sid>vimspireDelete()<CR>
@@ -171,6 +193,7 @@ if g:vimspire_map_keys
 	noremap <Leader>k :OpenGoogleSearch 
 	noremap <Leader>u :OpenURL 
 	noremap <Leader>U :OpenSelectedURL<CR>
+	noremap <Leader>p :OpenPB<CR>
 endif
 
 
