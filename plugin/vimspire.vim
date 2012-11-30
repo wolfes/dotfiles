@@ -44,8 +44,8 @@ endif
 
 if !exists("g:cmdsync_url")
 	" The server to use to sync commands to Tabspire.
-	"let g:cmdsync_url = "http://cmdsync.com:3000/api/0/"
-	let g:cmdsync_url = "http://localhost:3000/api/0/"
+	let g:cmdsync_url = "http://cmdsync.com:3000/api/0/"
+	"let g:cmdsync_url = "http://localhost:3000/api/0/"
 endif
 
 if !exists('g:vimspire_map_prefix')
