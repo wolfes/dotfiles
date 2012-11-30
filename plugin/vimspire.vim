@@ -100,7 +100,7 @@ function! OpenGoogleSearch(query)
 python << EOF
 import urllib, urllib2, vim
 request_url = (vim.eval('g:cmdsync_url') + "tabspire/" +
-		vim.eval('g:tabspire_client_id') + "/openTabByName")
+		vim.eval('g:tabspire_client_id') + "/openGoogleSearch")
 try:
 	params = urllib.urlencode({
 		'query' : vim.eval('a:query')
