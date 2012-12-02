@@ -187,7 +187,7 @@ command! -nargs=1 OpenURL call OpenURL ( '<args>' )
 command! -nargs=0 OpenSelectedURL call OpenSelectedURL ( )
 
 " Create command OpenPB: no args.
-"command! OpenPB call OpenPB ( )
+command! -nargs=0 -range OpenPB call OpenPB ( )
 
 if g:vimspire_map_keys
 	nnoremap <leader>d :call <sid>vimspireDelete()<CR>
@@ -196,7 +196,8 @@ if g:vimspire_map_keys
 	noremap <Leader>k :OpenGoogleSearch 
 	noremap <Leader>u :OpenURL 
 	noremap <Leader>U :OpenSelectedURL<CR>
-	vnoremap <Leader>p :call OpenPB()<CR>
+	"vnoremap <Leader>p :call OpenPB()<CR>
+	vnoremap <Leader>p OpenPB()<CR>
 
 endif
 
