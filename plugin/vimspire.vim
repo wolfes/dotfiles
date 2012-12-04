@@ -20,38 +20,35 @@
 scriptencoding utf-8
 
 " Exit when your app has already been loaded (or "compatible" mode set)
-if exists("g:loaded_vimspire") || &cp
-  finish
+if !exists("g:loaded_vimspire")
+	" Set version number
+	let g:loaded_vimspire = 1
+	let s:keepcpo = &cpo
+	set cpo&vim
+else
+    finish
 endif
 
-" Set version number
-let g:loaded_vimspire = 1
-let s:keepcpo = &cpo
-set cpo&vim
+let s:default_opts = {
+	\	'tabspire_client_id': '"PUT_YOUR_TABSPIRE_CLIENT_ID_HERE"',
+	\	'vimspire_enabled': 1,
+	\	'vimspire_map_keys': 1,
+	\	'vimspire_cmdsync_host': '"http://cmdsync.com:3000/api/0/"',
+	\	'vimspire_port': 3000,
+	\	'vimspire_map_prefix': '"<Leader>"',
+	\	'vimspire_auto_connect': 1
+\}
 
+for kv in items(s:default_opts)
+	" Set global keys in defailt_ops to their value if key is unset.
+	let k = 'g:'.kv[0]
+	let v = kv[1]
+	if !exists(k)
+		exe 'let '.k.'='.v
+	endif
+endfor
 
-
-if !exists('g:vimspire_map_keys')
-	" Let vimspire map commands to keys with noremap.
-	let g:vimspire_map_keys = 1
-endif
-
-
-if !exists("g:tabspire_client_id")
-	" Your tabspire client id, which you set from tabspire.
-    let g:tabspire_client_id = "PUT_YOUR_TABSPIRE_CLIENT_ID_HERE"
-endif
-
-if !exists("g:cmdsync_url")
-	" The server to use to sync commands to Tabspire.
-	let g:cmdsync_url = "http://cmdsync.com:3000/api/0/"
-	"let g:cmdsync_url = "http://localhost:3000/api/0/"
-endif
-
-if !exists('g:vimspire_map_prefix')
-	" Unused, example of how to map commands to plugin-prefix.
-    let g:vimspire_map_prefix = '<Leader>'
-endif
+" Unused, example of how to map commands to plugin-prefix.
 " execute "nnoremap"  g:vimspire_map_prefix."d"  ":call <sid>vimspireDelete()<CR>"
 
 " Features (Idea List)
@@ -78,7 +75,7 @@ function! OpenTabByName(name)
 python << EOF
 import urllib, urllib2, vim
 
-request_url = (vim.eval('g:cmdsync_url') + "tabspire/" +
+request_url = (vim.eval('g:vimspire_cmdsync_host') + "tabspire/" +
 		vim.eval('g:tabspire_client_id') + "/openTabByName")
 
 try:
@@ -99,7 +96,7 @@ function! OpenGoogleSearch(query)
 
 python << EOF
 import urllib, urllib2, vim
-request_url = (vim.eval('g:cmdsync_url') + "tabspire/" +
+request_url = (vim.eval('g:vimspire_cmdsync_host') + "tabspire/" +
 		vim.eval('g:tabspire_client_id') + "/openGoogleSearch")
 try:
 	params = urllib.urlencode({
@@ -119,7 +116,7 @@ function! OpenURL(url)
 
 python << EOF
 import urllib, urllib2, vim
-request_url = (vim.eval('g:cmdsync_url') + "tabspire/" +
+request_url = (vim.eval('g:vimspire_cmdsync_host') + "tabspire/" +
 		vim.eval('g:tabspire_client_id') + "/openURL")
 try:
 	params = urllib.urlencode({
@@ -138,7 +135,7 @@ function! OpenSelectedURL()
 
 python << EOF
 import urllib, urllib2, vim
-request_url = (vim.eval('g:cmdsync_url') + "tabspire/" +
+request_url = (vim.eval('g:vimspire_cmdsync_host') + "tabspire/" +
 		vim.eval('g:tabspire_client_id') + "/openURL")
 try:
 	params = urllib.urlencode({
@@ -159,7 +156,7 @@ function! OpenPB() range
 
 python << EOF
 import urllib, urllib2, vim
-request_url = (vim.eval('g:cmdsync_url') + "tabspire/" +
+request_url = (vim.eval('g:vimspire_cmdsync_host') + "tabspire/" +
 		vim.eval('g:tabspire_client_id') + "/openURL")
 try:
 	params = urllib.urlencode({
