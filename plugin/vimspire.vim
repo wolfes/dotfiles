@@ -22,7 +22,7 @@ scriptencoding utf-8
 " Exit when your app has already been loaded (or "compatible" mode set)
 if !exists("g:loaded_vimspire")
 	" Set version number
-	let g:loaded_vimspire = 1
+	let g:loaded_vimspire = 3
 	let s:keepcpo = &cpo
 	set cpo&vim
 else
@@ -48,6 +48,13 @@ for kv in items(s:default_opts)
 	endif
 endfor
 
+python << EOF
+TABSPIRE_REQUEST_URL = (
+	vim.eval('g:vimspire_cmdsync_host') +
+	"tabspire/" +
+	vim.eval('g:tabspire_client_id'))
+EOF
+
 " Unused, example of how to map commands to plugin-prefix.
 " execute "nnoremap"  g:vimspire_map_prefix."d"  ":call <sid>vimspireDelete()<CR>"
 
@@ -70,13 +77,12 @@ function! OpenTabByName(name)
 " chrome extension to open a tab by the specified name.
 " Saves tabs and rebuilds anything user specifies first.
 
-:	call SaveAndRebuild()
-
 python << EOF
 import urllib, urllib2, vim
 
 request_url = (vim.eval('g:vimspire_cmdsync_host') + "tabspire/" +
 		vim.eval('g:tabspire_client_id') + "/openTabByName")
+request_url = TABSPIRE_REQUEST_URL + '/openTabByName'
 
 try:
 	params = urllib.urlencode({
@@ -111,8 +117,6 @@ endfunction
 function! OpenURL(url)
 " Sends request to Tabspire thru cmdSync
 " to open a url in a new tab.
-
-:	call SaveAndRebuild()
 
 python << EOF
 import urllib, urllib2, vim
@@ -184,18 +188,15 @@ command! -nargs=1 OpenURL call OpenURL ( '<args>' )
 command! -nargs=0 OpenSelectedURL call OpenSelectedURL ( )
 
 " Create command OpenPB: no args.
-command! -nargs=0 -range OpenPB call OpenPB ( )
+command! -range OpenPB call OpenPB ( )
 
 if g:vimspire_map_keys
-	nnoremap <leader>d :call <sid>vimspireDelete()<CR>
-
 	noremap <Leader>m :OpenTabByName 
 	noremap <Leader>k :OpenGoogleSearch 
 	noremap <Leader>u :OpenURL 
 	noremap <Leader>U :OpenSelectedURL<CR>
-	"vnoremap <Leader>p :call OpenPB()<CR>
-	vnoremap <Leader>p OpenPB()<CR>
-
+	vnoremap <Leader>p :call OpenPB()<CR>
+	"vnoremap <Leader>p OpenPB()<CR>
 endif
 
 
