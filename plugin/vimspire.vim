@@ -49,6 +49,7 @@ for kv in items(s:default_opts)
 endfor
 
 python << EOF
+import urllib, urllib2, vim
 TABSPIRE_REQUEST_URL = (
 	vim.eval('g:vimspire_cmdsync_host') +
 	"tabspire/" +
@@ -73,15 +74,7 @@ function! SaveAndRebuild()
 endfunction
 
 function! OpenTabByName(name)
-" Sends request to nspire.it to ask the user's
-" chrome extension to open a tab by the specified name.
-" Saves tabs and rebuilds anything user specifies first.
-
 python << EOF
-import urllib, urllib2, vim
-
-request_url = (vim.eval('g:vimspire_cmdsync_host') + "tabspire/" +
-		vim.eval('g:tabspire_client_id') + "/openTabByName")
 request_url = TABSPIRE_REQUEST_URL + '/openTabByName'
 
 try:
@@ -97,13 +90,9 @@ EOF
 endfunction
 
 function! OpenGoogleSearch(query)
-" Sends request to tabspire thru cmdSync
-" to open a google search for the query.
-
 python << EOF
-import urllib, urllib2, vim
-request_url = (vim.eval('g:vimspire_cmdsync_host') + "tabspire/" +
-		vim.eval('g:tabspire_client_id') + "/openGoogleSearch")
+request_url = TABSPIRE_REQUEST_URL + '/openGoogleSearch'
+
 try:
 	params = urllib.urlencode({
 		'query' : vim.eval('a:query')
@@ -115,13 +104,9 @@ EOF
 endfunction
 
 function! OpenURL(url)
-" Sends request to Tabspire thru cmdSync
-" to open a url in a new tab.
-
 python << EOF
-import urllib, urllib2, vim
-request_url = (vim.eval('g:vimspire_cmdsync_host') + "tabspire/" +
-		vim.eval('g:tabspire_client_id') + "/openURL")
+request_url = TABSPIRE_REQUEST_URL + '/openURL'
+
 try:
 	params = urllib.urlencode({
 		'url' : vim.eval('a:url')
@@ -138,9 +123,8 @@ function! OpenSelectedURL()
 " to open the current buffer's selected line as a url.
 
 python << EOF
-import urllib, urllib2, vim
-request_url = (vim.eval('g:vimspire_cmdsync_host') + "tabspire/" +
-		vim.eval('g:tabspire_client_id') + "/openURL")
+request_url = TABSPIRE_REQUEST_URL + '/openURL'
+
 try:
 	params = urllib.urlencode({
 		'url' : vim.current.line
@@ -159,9 +143,8 @@ function! OpenPB() range
 :'<,'> !pb
 
 python << EOF
-import urllib, urllib2, vim
-request_url = (vim.eval('g:vimspire_cmdsync_host') + "tabspire/" +
-		vim.eval('g:tabspire_client_id') + "/openURL")
+request_url = TABSPIRE_REQUEST_URL + '/openURL'
+
 try:
 	params = urllib.urlencode({
 		'url' : vim.current.line
@@ -175,8 +158,28 @@ EOF
 endfunction
 
 
+function! ReloadTabByName(tabName)
+" Reload a tab by its name in Tabspire.
+
+python << EOF
+request_url = TABSPIRE_REQUEST_URL + '/reloadTabByName'
+
+try:
+	params = urllib.urlencode({
+		'tabName' : vim.eval('a:tabName')
+	})
+	resp_cmd = urllib2.urlopen(request_url, params)
+except Exception, e:
+    print e
+EOF
+endfunction
+
+
 " Create command OpenTabByName: exactly 1 tabname.
 command! -nargs=1 OpenTabByName call OpenTabByName ( '<args>' )
+
+" Create command ReloadTabByName: exactly 1 tabname.
+command! -nargs=1 ReloadTabByName call ReloadTabByName ( '<args>' )
 
 " Create command OpenGoogleSearch: 1+ search terms.
 command! -nargs=+ OpenGoogleSearch call OpenGoogleSearch ( '<args>' )
@@ -192,6 +195,7 @@ command! -range OpenPB call OpenPB ( )
 
 if g:vimspire_map_keys
 	noremap <Leader>m :OpenTabByName 
+	noremap <Leader>M :ReloadTabByName 
 	noremap <Leader>k :OpenGoogleSearch 
 	noremap <Leader>u :OpenURL 
 	noremap <Leader>U :OpenSelectedURL<CR>
