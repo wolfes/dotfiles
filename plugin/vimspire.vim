@@ -174,9 +174,25 @@ except Exception, e:
 EOF
 endfunction
 
+function! ReloadCurrentTab()
+" Reload currently focused tab in browser.
+
+python << EOF
+request_url = TABSPIRE_REQUEST_URL + '/reloadCurrentTab'
+
+try:
+	params = urllib.urlencode({})
+	resp_cmd = urllib2.urlopen(request_url, params)
+except Exception, e:
+    print e
+EOF
+endfunction
 
 " Create command OpenTabByName: exactly 1 tabname.
 command! -nargs=1 OpenTabByName call OpenTabByName ( '<args>' )
+
+" Create command ReloadCurrentTab: exactly 0 args.
+command! -nargs=0 ReloadCurrentTab call ReloadCurrentTab ( '<args>' )
 
 " Create command ReloadTabByName: exactly 1 tabname.
 command! -nargs=1 ReloadTabByName call ReloadTabByName ( '<args>' )
@@ -196,11 +212,12 @@ command! -range OpenPB call OpenPB ( )
 if g:vimspire_map_keys
 	noremap <Leader>m :OpenTabByName 
 	noremap <Leader>M :ReloadTabByName 
+	noremap <Leader>R :ReloadCurrentTab<CR>
 	noremap <Leader>k :OpenGoogleSearch 
 	noremap <Leader>u :OpenURL 
 	noremap <Leader>U :OpenSelectedURL<CR>
 	vnoremap <Leader>p :call OpenPB()<CR>
-	"vnoremap <Leader>p OpenPB()<CR>
+	"vnoremap <Leader>p :OpenPB()<CR>
 endif
 
 
