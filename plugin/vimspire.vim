@@ -192,7 +192,7 @@ endfunction
 command! -nargs=1 OpenTabByName call OpenTabByName ( '<args>' )
 
 " Create command ReloadCurrentTab: exactly 0 args.
-command! -nargs=0 ReloadCurrentTab call ReloadCurrentTab ( '<args>' )
+command! -nargs=0 ReloadCurrentTab call ReloadCurrentTab()
 
 " Create command ReloadTabByName: exactly 1 tabname.
 command! -nargs=1 ReloadTabByName call ReloadTabByName ( '<args>' )
