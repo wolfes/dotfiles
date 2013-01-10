@@ -48,6 +48,7 @@ for kv in items(s:default_opts)
 	endif
 endfor
 
+
 python << EOF
 import urllib, urllib2, vim
 TABSPIRE_REQUEST_URL = (
@@ -56,11 +57,8 @@ TABSPIRE_REQUEST_URL = (
 	vim.eval('g:tabspire_client_id'))
 EOF
 
-" Unused, example of how to map commands to plugin-prefix.
-" execute "nnoremap"  g:vimspire_map_prefix."d"  ":call <sid>vimspireDelete()<CR>"
 
 " Features (Idea List)
-"
 " Reload tab:
 " - by name.
 " - Set default tab name to reload when
@@ -73,10 +71,10 @@ function! SaveAndRebuild()
 	" u
 endfunction
 
+
 function! OpenTabByName(name)
 python << EOF
 request_url = TABSPIRE_REQUEST_URL + '/openTabByName'
-
 try:
 	params = urllib.urlencode({
 		'tabName' : vim.eval('a:name')
@@ -88,6 +86,7 @@ except Exception, e:
 
 EOF
 endfunction
+
 
 function! OpenGoogleSearch(query)
 python << EOF
@@ -102,6 +101,7 @@ except Exception, e:
     print e
 EOF
 endfunction
+
 
 function! OpenURL(url)
 python << EOF
@@ -124,7 +124,6 @@ function! OpenSelectedURL()
 
 python << EOF
 request_url = TABSPIRE_REQUEST_URL + '/openURL'
-
 try:
 	params = urllib.urlencode({
 		'url' : vim.current.line
@@ -139,12 +138,9 @@ endfunction
 function! OpenPB() range
 " Sends req to Tabspire thru cmdSync
 " to open the current buffer's selected line as a url.
-
 :'<,'> !pb
-
 python << EOF
 request_url = TABSPIRE_REQUEST_URL + '/openURL'
-
 try:
 	params = urllib.urlencode({
 		'url' : vim.current.line
@@ -160,10 +156,8 @@ endfunction
 
 function! ReloadTabByName(tabName)
 " Reload a tab by its name in Tabspire.
-
 python << EOF
 request_url = TABSPIRE_REQUEST_URL + '/reloadTabByName'
-
 try:
 	params = urllib.urlencode({
 		'tabName' : vim.eval('a:tabName')
@@ -176,10 +170,8 @@ endfunction
 
 function! ReloadCurrentTab()
 " Reload currently focused tab in Chrome.
-
 python << EOF
 request_url = TABSPIRE_REQUEST_URL + '/reloadCurrentTab'
-
 try:
 	params = urllib.urlencode({})
 	resp_cmd = urllib2.urlopen(request_url, params)
@@ -188,28 +180,11 @@ except Exception, e:
 EOF
 endfunction
 
-function! ReloadFocusMark(markChar)
-" Reload/Open and Focus marked tab in Chrome.
-
-python << EOF
-request_url = TABSPIRE_REQUEST_URL + '/reloadFocusMark'
-
-try:
-	params = urllib.urlencode({
-		'markChar': vim.eval('a:markChar')
-	})
-	resp_cmd = urllib2.urlopen(request_url, params)
-except Exception, e:
-    print e
-EOF
-endfunction
 
 function! FocusMark(markChar)
 " Reload/Open and Focus marked tab in Chrome.
-
 python << EOF
 request_url = TABSPIRE_REQUEST_URL + '/focusMark'
-
 try:
 	params = urllib.urlencode({
 		'markChar': vim.eval('a:markChar')
@@ -219,6 +194,37 @@ except Exception, e:
     print e
 EOF
 endfunction
+
+
+function! ReloadFocusMark(markChar)
+" Reload/Open and Focus marked tab in Chrome.
+python << EOF
+request_url = TABSPIRE_REQUEST_URL + '/reloadFocusMark'
+try:
+	params = urllib.urlencode({
+		'markChar': vim.eval('a:markChar')
+	})
+	resp_cmd = urllib2.urlopen(request_url, params)
+except Exception, e:
+    print e
+EOF
+endfunction
+
+
+function! WafAndReload()
+" Rebuild templates & Reload currently focused Chrome tab.
+":!cd ~/pg/yelp-main && waf<CR>
+execute 'silent !cd ~/pg/yelp-main<Bar>!waf<Bar>C-r<Bar>redraw!<C-M>'
+python << EOF
+request_url = TABSPIRE_REQUEST_URL + '/reloadCurrentTab'
+try:
+	params = urllib.urlencode({})
+	resp_cmd = urllib2.urlopen(request_url, params)
+except Exception, e:
+    print e
+EOF
+endfunction
+
 
 " Create command OpenTabByName: exactly 1 tabname.
 command! -nargs=1 OpenTabByName call OpenTabByName ( '<args>' )
@@ -231,6 +237,9 @@ command! -nargs=1 ReloadFocusMark call ReloadFocusMark ( '<args>' )
 
 " Create command FocusMark: exactly 1 args.
 command! -nargs=1 FocusMark call FocusMark ( '<args>' )
+
+" Create command WafAndReload: exactly 0 args.
+command! -nargs=0 WafAndReload call WafAndReload()
 
 " Create command ReloadTabByName: exactly 1 tabname.
 command! -nargs=1 ReloadTabByName call ReloadTabByName ( '<args>' )
@@ -252,6 +261,7 @@ if g:vimspire_map_keys
 	noremap <Leader>M :ReloadTabByName 
 	noremap <Leader>j :ReloadFocusMark 
 	noremap <Leader>J :FocusMark 
+"	noremap <Leader>r :WafAndReload<CR>
 	noremap <Leader>R :ReloadCurrentTab<CR>
 	noremap <Leader>k :OpenGoogleSearch 
 	noremap <Leader>u :OpenURL 
