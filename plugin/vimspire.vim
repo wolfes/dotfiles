@@ -175,7 +175,7 @@ EOF
 endfunction
 
 function! ReloadCurrentTab()
-" Reload currently focused tab in browser.
+" Reload currently focused tab in Chrome.
 
 python << EOF
 request_url = TABSPIRE_REQUEST_URL + '/reloadCurrentTab'
@@ -188,11 +188,30 @@ except Exception, e:
 EOF
 endfunction
 
+function! ReloadFocusMark(markChar)
+" Reload/Open and Focus marked tab in Chrome.
+
+python << EOF
+request_url = TABSPIRE_REQUEST_URL + '/reloadFocusMark'
+
+try:
+	params = urllib.urlencode({
+		'markChar': vim.eval('a:markChar')
+	})
+	resp_cmd = urllib2.urlopen(request_url, params)
+except Exception, e:
+    print e
+EOF
+endfunction
+
 " Create command OpenTabByName: exactly 1 tabname.
 command! -nargs=1 OpenTabByName call OpenTabByName ( '<args>' )
 
 " Create command ReloadCurrentTab: exactly 0 args.
 command! -nargs=0 ReloadCurrentTab call ReloadCurrentTab()
+
+" Create command ReloadFocusMark: exactly 1 args.
+command! -nargs=1 ReloadFocusMark call ReloadFocusMark ( '<args>' )
 
 " Create command ReloadTabByName: exactly 1 tabname.
 command! -nargs=1 ReloadTabByName call ReloadTabByName ( '<args>' )
@@ -212,6 +231,7 @@ command! -range OpenPB call OpenPB ( )
 if g:vimspire_map_keys
 	noremap <Leader>m :OpenTabByName 
 	noremap <Leader>M :ReloadTabByName 
+	noremap <Leader>j :ReloadFocusMark 
 	noremap <Leader>R :ReloadCurrentTab<CR>
 	noremap <Leader>k :OpenGoogleSearch 
 	noremap <Leader>u :OpenURL 
