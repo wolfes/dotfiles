@@ -33,6 +33,7 @@ let s:default_opts = {
 	\	'tabspire_client_id': '"PUT_YOUR_TABSPIRE_CLIENT_ID_HERE"',
 	\	'vimspire_enabled': 1,
 	\	'vimspire_map_keys': 1,
+	\	'vimspire_local_host': '"http://localhost:3000/api/0/"',
 	\	'vimspire_cmdsync_host': '"http://cmdsync.com:3000/api/0/"',
 	\	'vimspire_port': 3000,
 	\	'vimspire_map_prefix': '"<Leader>"',
@@ -50,14 +51,33 @@ endfor
 
 python << EOF
 import urllib, urllib2, vim
-TABSPIRE_REQUEST_URL = (
+REMOTE_TABSPIRE_REQUEST_URL = (
 	vim.eval('g:vimspire_cmdsync_host') +
 	"tabspire/" +
 	vim.eval('g:tabspire_client_id'))
+
+LOCAL_TABSPIRE_REQUEST_URL = (
+	vim.eval('g:vimspire_local_host') +
+	"tabspire/" +
+	vim.eval('g:tabspire_client_id'))
+
+#TABSPIRE_REQUEST_URL = LOCAL_TABSPIRE_REQUEST_URL
+TABSPIRE_REQUEST_URL = REMOTE_TABSPIRE_REQUEST_URL
 EOF
 
 " Unused, example of how to map commands to plugin-prefix.
 " execute "nnoremap"  g:vimspire_map_prefix."d"  ":call <sid>vimspireDelete()<CR>"
+
+function! SelectServer(index)
+python << EOF
+"""Select which cmdsync server to use."""
+index = vim.eval('a:index');
+if index == '0':
+	TABSPIRE_REQUEST_URL = REMOTE_TABSPIRE_REQUEST_URL
+elif index == '1':
+	TABSPIRE_REQUEST_URL = LOCAL_TABSPIRE_REQUEST_URL
+EOF
+endfunction
 
 " Features (Idea List)
 "
@@ -220,6 +240,8 @@ except Exception, e:
 EOF
 endfunction
 
+command! -nargs=1 SelectServer call SelectServer ( '<args>' )
+
 " Create command OpenTabByName: exactly 1 tabname.
 command! -nargs=1 OpenTabByName call OpenTabByName ( '<args>' )
 
@@ -248,6 +270,7 @@ command! -nargs=0 OpenSelectedURL call OpenSelectedURL ( )
 command! -range OpenPB call OpenPB ( )
 
 if g:vimspire_map_keys
+	noremap <Leader>ss :SelectServer 
 	noremap <Leader>m :OpenTabByName 
 	noremap <Leader>M :ReloadTabByName 
 	noremap <Leader>j :ReloadFocusMark 

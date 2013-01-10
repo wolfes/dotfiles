@@ -16,3 +16,8 @@ Allow multiple target clientId's, so you can target:
 - Everyone in your group
 - Everyone in the company
 - Everyone.
+
+
++ (01-10-2013) Added SelectServer(0 or 1)  bound to  <Leader>ss
+	Use 0 to Select Remote Server (cmdsync.com)
+	Use 1 to Select Local Server (localhost:3000)
