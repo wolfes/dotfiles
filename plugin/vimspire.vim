@@ -49,7 +49,7 @@ for kv in items(s:default_opts)
 	endif
 endfor
 
-
+" Initialize Python Server URL Constants.
 python << EOF
 import urllib, urllib2, vim
 REMOTE_TABSPIRE_REQUEST_URL = (
@@ -64,8 +64,18 @@ LOCAL_TABSPIRE_REQUEST_URL = (
 
 #TABSPIRE_REQUEST_URL = LOCAL_TABSPIRE_REQUEST_URL
 TABSPIRE_REQUEST_URL = REMOTE_TABSPIRE_REQUEST_URL
-EOF
 
+def postCmd(params, method):
+	"""Post a command with params to server."""
+	request_url = TABSPIRE_REQUEST_URL + method
+	params = urllib.urlencode(params);
+	try:
+		response = urllib2.urlopen(request_url, params)
+		return response
+	except Exception, e:
+		print e
+	return {}
+EOF
 
 function! SelectServer(index)
 python << EOF
@@ -91,160 +101,79 @@ function! SaveAndRebuild()
 	" u
 endfunction
 
-
 function! OpenTabByName(name)
 python << EOF
-request_url = TABSPIRE_REQUEST_URL + '/openTabByName'
-try:
-	params = urllib.urlencode({
-		'tabName' : vim.eval('a:name')
-	})
-	response = urllib2.urlopen(request_url, params)
-
-except Exception, e:
-    print e
-
+resp = postCmd({'tabName' : vim.eval('a:name')}, '/openTabByName')
 EOF
 endfunction
-
 
 function! OpenGoogleSearch(query)
 python << EOF
-request_url = TABSPIRE_REQUEST_URL + '/openGoogleSearch'
-
-try:
-	params = urllib.urlencode({
-		'query' : vim.eval('a:query')
-	})
-	response = urllib2.urlopen(request_url, params)
-except Exception, e:
-    print e
+resp = postCmd({'query' : vim.eval('a:query')}, '/openGoogleSearch')
 EOF
 endfunction
-
 
 function! OpenURL(url)
 python << EOF
-request_url = TABSPIRE_REQUEST_URL + '/openURL'
-
-try:
-	params = urllib.urlencode({
-		'url' : vim.eval('a:url')
-	})
-	resp_loc = urllib2.urlopen(request_url, params)
-except Exception, e:
-    print e
+resp = postCmd({'url' : vim.eval('a:url')}, '/openURL')
 EOF
 endfunction
-
 
 function! OpenSelectedURL()
 " Sends req to Tabspire thru cmdSync
 " to open the current buffer's selected line as a url.
-
 python << EOF
-request_url = TABSPIRE_REQUEST_URL + '/openURL'
-try:
-	params = urllib.urlencode({
-		'url' : vim.current.line
-	})
-	resp_cmd = urllib2.urlopen(request_url, params)
-except Exception, e:
-    print e
+resp = postCmd({'url' : vim.current.line}, '/openURL')
 EOF
 endfunction
-
 
 function! OpenPB() range
 " Sends req to Tabspire thru cmdSync
 " to open the current buffer's selected line as a url.
 :'<,'> !pb
 python << EOF
-request_url = TABSPIRE_REQUEST_URL + '/openURL'
-try:
-	params = urllib.urlencode({
-		'url' : vim.current.line
-	})
-	resp_cmd = urllib2.urlopen(request_url, params)
-except Exception, e:
-    print e
+resp = postCmd({'url' : vim.current.line}, '/openURL')
 EOF
 " Undo pastebin insertion of url.
 :	normal! u
 endfunction
 
-
 function! ReloadTabByName(tabName)
 " Reload a tab by its name in Tabspire.
 python << EOF
-request_url = TABSPIRE_REQUEST_URL + '/reloadTabByName'
-try:
-	params = urllib.urlencode({
-		'tabName' : vim.eval('a:tabName')
-	})
-	resp_cmd = urllib2.urlopen(request_url, params)
-except Exception, e:
-    print e
+resp = postCmd({'tabName' : vim.eval('a:tabName')}, '/reloadTabByName')
 EOF
 endfunction
 
 function! ReloadCurrentTab()
 " Reload currently focused tab in Chrome.
 python << EOF
-request_url = TABSPIRE_REQUEST_URL + '/reloadCurrentTab'
-try:
-	params = urllib.urlencode({})
-	resp_cmd = urllib2.urlopen(request_url, params)
-except Exception, e:
-    print e
+resp = postCmd({}, '/reloadCurrentTab')
 EOF
 endfunction
-
 
 function! FocusMark(markChar)
-" Reload/Open and Focus marked tab in Chrome.
+" Focus/Open marked tab in Chrome.
 python << EOF
-request_url = TABSPIRE_REQUEST_URL + '/focusMark'
-try:
-	params = urllib.urlencode({
-		'markChar': vim.eval('a:markChar')
-	})
-	resp_cmd = urllib2.urlopen(request_url, params)
-except Exception, e:
-    print e
+resp = postCmd({'markChar' : vim.eval('a:markChar')}, '/focusMark')
 EOF
 endfunction
-
 
 function! ReloadFocusMark(markChar)
 " Reload/Open and Focus marked tab in Chrome.
 python << EOF
-request_url = TABSPIRE_REQUEST_URL + '/reloadFocusMark'
-try:
-	params = urllib.urlencode({
-		'markChar': vim.eval('a:markChar')
-	})
-	resp_cmd = urllib2.urlopen(request_url, params)
-except Exception, e:
-    print e
+resp = postCmd({'markChar' : vim.eval('a:markChar')}, '/reloadFocusMark')
 EOF
 endfunction
-
 
 function! WafAndReload()
 " Rebuild templates & Reload currently focused Chrome tab.
 ":!cd ~/pg/yelp-main && waf<CR>
 execute 'silent !cd ~/pg/yelp-main<Bar>!waf<Bar>C-r<Bar>redraw!<C-M>'
 python << EOF
-request_url = TABSPIRE_REQUEST_URL + '/reloadCurrentTab'
-try:
-	params = urllib.urlencode({})
-	resp_cmd = urllib2.urlopen(request_url, params)
-except Exception, e:
-    print e
+resp = postCmd({}, '/reloadCurrentTab')
 EOF
 endfunction
-
 
 " Select remote=0 or local=1 server to message.
 command! -nargs=1 SelectServer call SelectServer ( '<args>' )

@@ -18,6 +18,7 @@ Allow multiple target clientId's, so you can target:
 - Everyone.
 
 
++ (01-11-2013) DRY: From 302 to 229 lines of code :)
 + (01-10-2013) Added SelectServer(0 or 1)  bound to  <Leader>ss
 	Use 0 to Select Remote Server (cmdsync.com)
 	Use 1 to Select Local Server (localhost:3000)
