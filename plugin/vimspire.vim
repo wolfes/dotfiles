@@ -7,6 +7,12 @@
 " Version:     0.0.0
 " Note:        Connect all the things!
 "
+" Setup:
+"	Add to your .vimrc:
+"		g:tabspire_client_id="your_client_id"
+"	Optioanl, use if you want to map your own bindings.
+"		g:vimspire_map_keys=0
+"
 " Original taglist copyright notice:
 "              Permission is hereby granted to use and distribute this code,
 "              with or without modifications, provided that this copyright
