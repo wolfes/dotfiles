@@ -159,6 +159,13 @@ resp = postCmd({'markChar' : vim.eval('a:markChar')}, '/focusMark')
 EOF
 endfunction
 
+function! FocusCurrentWindow()
+" Focus Chrome's 'focused tab', giving focus to Chrome App.
+python << EOF
+resp = postCmd({'foo':'bar'}, '/focusCurrentWindow')
+EOF
+endfunction
+
 function! ReloadFocusMark(markChar)
 " Reload/Open and Focus marked tab in Chrome.
 python << EOF
@@ -189,6 +196,9 @@ command! -nargs=1 ReloadFocusMark call ReloadFocusMark ( '<args>' )
 
 " Create command FocusMark: exactly 1 args.
 command! -nargs=1 FocusMark call FocusMark ( '<args>' )
+
+" Create command FocusCurrentWindow: exactly 0 args.
+command! -nargs=0 FocusCurrentWindow call FocusCurrentWindow()
 
 " Create command WafAndReload: exactly 0 args.
 command! -nargs=0 WafAndReload call WafAndReload()
@@ -221,6 +231,7 @@ if g:vimspire_map_keys
 	noremap <Leader>U :OpenSelectedURL<CR>
 	vnoremap <Leader>p :call OpenPB()<CR>
 	"vnoremap <Leader>p :OpenPB()<CR>
+	noremap <Leader>x :FocusCurrentWindow<CR>
 endif
 
 
