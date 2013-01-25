@@ -31,17 +31,35 @@ Contents                                            *vimspire* *vimspire-content
 
 Vimspire: Control your Chrome Browser from Vim!
 
+Vimspire provides methods for remote controlling any Chrome Browser
+that has the Tabspire Chrome Extension.
+
+Vimspire lets you open and reload tabs in Chrome that you've saved
+as under a mark character or given a name in Tabspire.
+
+Vimspire also lets you:
+- Switch focus from Vim to Chrome.
+- Reload the currently focused Chrome tab.
+- Open a URL in Chrome, either under the cursor or at the prompt.
+- Open Google Searches in Chrome, from Vim's command line prompt.
+- ...
+- And more, if you let me know what you want!
+
 
 
 2. Preferences
 
+Set g:tabspire_client_id in your .vimrc to your (string) Tabspire Client ID.
+
 Set g:vimspire_map_keys to 0 if you want to define your own function mappings.
+
+More advanced debugging settings in s:default_opts.
 
 
 
 3. Usage
 
-Open tabs, reload tabs, focus Chrome's current window, and more.
+Interact with named tabs, marked tabs, and more in Chrome through Tabspire.
 
 
 3.1 Named Tabs
@@ -83,7 +101,7 @@ Open tabs, reload tabs, focus Chrome's current window, and more.
 	Saves, Wafs, Reloads.
 
 - SelectServer
-	Select which server to send messages to.  (For Debugging)
+	(For Debugging... Select which server to send messages to.)
 	One param:
 		0 -> remote server
 		1 -> local server
