@@ -1,0 +1,89 @@
+*vimspire.txt*	Control Chrome From Vim!
+
+Author:         Wolfe Styke <wstyke@gmail.com>
+Homepage:       http://wstyke.com/vimspire
+Version:        0.0.0
+
+==============================================================================
+Contents                                            *vimspire* *vimspire-contents*
+
+         1. Intro ........................... |vimspire-intro|
+              Pseudo-tags ................... |vimspire-pseudotags|
+              Supported features ............ |vimspire-features|
+              Other ctags-compatible programs |vimspire-other|
+         2. Requirements .................... |vimspire-requirements|
+         3. Installation .................... |vimspire-installation|
+         4. Usage ........................... |vimspire-usage|
+              Commands ...................... |vimspire-commands|
+              Key mappings .................. |vimspire-keys|
+         5. Configuration ................... |vimspire-configuration|
+              Highlight colours ............. |vimspire-highlight|
+              Automatically opening vimspire .. |vimspire-autoopen|
+              Show current tag in statusline  |vimspire-statusline|
+         6. Extending vimspire ................ |vimspire-extend|
+         7. Troubleshooting & Known issues .. |vimspire-issues|
+         8. History ......................... |vimspire-history|
+         9. Todo ............................ |vimspire-todo|
+        10. Credits ......................... |vimspire-credits|
+
+==============================================================================
+1. Intro                                                        *vimspire-intro*
+
+Vimspire: Control your Chrome Browser from Vim!
+
+
+
+2. Preferences
+
+Set g:vimspire_map_keys to 0 if you want to define your own function mappings.
+
+
+
+3. Usage
+
+Open tabs, reload tabs, focus Chrome's current window, and more.
+
+
+3.1 Named Tabs
+
+- OpenTabByName
+- ReloadTabByName
+	Prompts user for a name, which Tabspire maps to a url and opens/reloads in Chrome.
+
+
+3.2 Marked Tabs
+
+- FocusMark
+- ReloadFocusMark
+	Prompts user for a mark {char}.
+
+
+3.3 Utility Methods
+
+- OpenPB
+	Opens a pastebin url in Chrome with visually selected text.
+
+- FocusCurrentWindow
+	Focuses the Chrome Browser's current window.
+	Useful for switching focus from vim to chrome without alt-tabbing.
+
+- ReloadCurrentTab
+	Reload's and focuses the current tab in Chrome.
+
+- OpenURL
+	Prompts user for a url in normal mode, hit enter to open url in Chrome.
+
+- OpenSelectedURL
+	Opens the current WORD as a url in Chrome.
+
+- OpenGoogleSearch
+	Prompts user for 1+ query terms, opens google search in Chrome.
+
+- WafAndReload
+	Saves, Wafs, Reloads.
+
+- SelectServer
+	Select which server to send messages to.  (For Debugging)
+	One param:
+		0 -> remote server
+		1 -> local server

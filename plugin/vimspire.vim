@@ -126,10 +126,9 @@ EOF
 endfunction
 
 function! OpenSelectedURL()
-" Sends req to Tabspire thru cmdSync
-" to open the current buffer's selected line as a url.
+" Open cWORD in Chrome Tab, through cmdSync->Tabspire.
 python << EOF
-resp = postCmd({'url' : vim.current.line}, '/openURL')
+resp = postCmd({'url' : vim.eval('expand(\'<cWORD>\')')}, '/openURL')
 EOF
 endfunction
 
