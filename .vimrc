@@ -94,6 +94,7 @@ augroup END
 
 " Color scheme and font
 colorscheme xoria256
+colorscheme desert
 set guifont=Monaco:h12
 
 " Highlight current line
