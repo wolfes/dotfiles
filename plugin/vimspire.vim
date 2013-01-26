@@ -57,7 +57,7 @@ endfor
 
 " Initialize Python Server URL Constants.
 python << EOF
-import urllib, urllib2, vim
+import urllib, urllib2, vim, subprocess
 REMOTE_TABSPIRE_REQUEST_URL = (
 	vim.eval('g:vimspire_cmdsync_host') +
 	"tabspire/" +
@@ -178,14 +178,6 @@ resp = postCmd({'markChar' : vim.eval('a:markChar')}, '/reloadFocusMark')
 EOF
 endfunction
 
-function! WafAndReload()
-" Rebuild templates & Reload currently focused Chrome tab.
-":!cd ~/pg/yelp-main && waf<CR>
-execute 'silent !cd ~/pg/yelp-main<Bar>!waf<Bar>C-r<Bar>redraw!<C-M>'
-python << EOF
-resp = postCmd({}, '/reloadCurrentTab')
-EOF
-endfunction
 
 " Select remote=0 or local=1 server to message.
 command! -nargs=1 SelectServer call SelectServer ( '<args>' )
@@ -204,9 +196,6 @@ command! -nargs=1 FocusMark call FocusMark ( '<args>' )
 
 " Create command FocusCurrentWindow: exactly 0 args.
 command! -nargs=0 FocusCurrentWindow call FocusCurrentWindow()
-
-" Create command WafAndReload: exactly 0 args.
-command! -nargs=0 WafAndReload call WafAndReload()
 
 " Create command ReloadTabByName: exactly 1 tabname.
 command! -nargs=1 ReloadTabByName call ReloadTabByName ( '<args>' )
@@ -229,7 +218,6 @@ if g:vimspire_map_keys
 	noremap <Leader>M :ReloadTabByName 
 	noremap <Leader>j :ReloadFocusMark 
 	noremap <Leader>J :FocusMark 
-"	noremap <Leader>r :WafAndReload<CR>
 	noremap <Leader>R :ReloadCurrentTab<CR>
 	noremap <Leader>k :OpenGoogleSearch 
 	noremap <Leader>u :OpenURL 
