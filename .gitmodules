@@ -16,3 +16,6 @@
 [submodule "vim/bundle/vim-mustang"]
 	path = .vim/bundle/vim-mustang
 	url = git://github.com/marcus/vim-mustang.git
+[submodule "/Users/wolfe/dotfiles/.vim/bundle/vimspire"]
+	path = /Users/wolfe/dotfiles/.vim/bundle/vimspire
+	url = https://github.com/wolfes/vimspire.git
