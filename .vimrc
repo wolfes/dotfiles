@@ -1,3 +1,6 @@
+" VIMRC - Vim Customizations.
+" Many thanks to: mwilson and Buck.
+
 set nocompatible
 
 " ---------- plugins ---------
@@ -6,8 +9,10 @@ call pathogen#infect()
 
 " Syntastic
 let g:syntastic_auto_loc_list=1
+let g:syntastic_auto_jump=1
 
 " Tagbar
+let g:tagbar_width = 60
 let g:tagbar_sort = 0
 let g:tagbar_compact = 1
 let g:tagbar_autofocus = 1
@@ -20,6 +25,14 @@ endif
 
 " Command-T
 let g:CommandTMaxFiles=999999
+
+if filereadable($HOME . "/.vimrc.extra")
+    source $HOME/.vimrc.extra
+endif
+
+if filereadable($HOME . "/.vimrc.private")
+    source $HOME/.vimrc.private
+endif
 
 " ---------- settings ---------
 
@@ -42,18 +55,42 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 
-" Except HTML - 2 spaces
-autocmd BufWinEnter *.html setlocal tabstop=2
-autocmd BufWinEnter *.html setlocal expandtab
-autocmd BufWinEnter *.html setlocal shiftwidth=2
+" Fold Settings
+set foldmethod=indent
+set foldnestmax=1
 
-" Except JS - 2 spaces
-autocmd BufWinEnter *.js setlocal expandtab
+augroup foldtype
+  autocmd BufReadPre * setlocal foldmethod=marker
+  autocmd BufReadPre * setlocal foldmethod=indent
+  "Set foldnestmax to 2 to fold classes and their functions in python.
+  autocmd BufReadPre *.py setlocal foldnestmax=2
+augroup END
+
+" Except HTML - 2 spaces
+augroup htmlLocal
+	autocmd BufWinEnter *.html setlocal tabstop=2
+	autocmd BufWinEnter *.html setlocal expandtab
+	autocmd BufWinEnter *.html setlocal shiftwidth=2
+augroup END
 
 " highlight trailing whitespace and non-tab indents
-autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
-autocmd BufWinEnter *.* match ExtraWhitespace /\s\+$/
-autocmd BufWinLeave * call clearmatches()
+augroup highlights
+	autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+	autocmd BufWinEnter *.* match ExtraWhitespace /\s\+$/
+	autocmd BufWinLeave * call clearmatches()
+augroup END
+
+" Except JS - 2 spaces
+augroup jsLocal
+	autocmd BufWinEnter *.js setlocal expandtab
+augroup END
+
+" Highlight trailing whitespace and non-tab indents.
+augroup highlights
+	autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+	autocmd BufWinEnter *.* match ExtraWhitespace /\s\+$/
+	autocmd BufWinLeave * call clearmatches()
+augroup END
 
 " Color scheme and font
 colorscheme xoria256
@@ -114,63 +151,113 @@ set splitright
 set tags+=./.tags,.tags,../.tags,../../.tags
 
 " Filetypes
-autocmd BufEnter *.mako setlocal filetype=html
+augroup makoLocal
+	autocmd BufEnter *.mako setlocal filetype=html
+augroup END
 
 " ---------- mappings ---------
 
+nnoremap - ddp
+nnoremap _ ddkP
+nnoremap <Space> i_<Esc>r
+
+" Source .vimrc / .bash_profile
+nnoremap <Leader>sv :so $MYVIMRC<CR>
+nnoremap <Leader>sp :execute ":!source " . expand("~/.bash_profile")<CR><CR>
+
 " Typos and things I don't want to do
-nmap Q <ESC>
-nmap :Q :q
-nmap :W :w
-nmap :WQ :wq
+nnoremap Q <ESC>
+nnoremap :Q :q
+nnoremap :W :w
+nnoremap :WQ :wq
 
 " Windows
-map <C-J> <C-W>j
-map <C-K> <C-W>k
-map <C-H> <C-W>h
-map <C-L> <C-W>l
+noremap <C-J> <C-W>j
+noremap <C-K> <C-W>k
+noremap <C-H> <C-W>h
+noremap <C-L> <C-W>l
 
 " Function key shortcuts
-map <F1> <nop>
-map <F3> :set hlsearch! hlsearch?<CR>
-map <F6> :NERDTreeClose<CR>
-map <F7> :NERDTreeFind<CR> "TODO combine with F6 to make toggle
-map <F8> :TagbarToggle<cr>
-map <F9> :!/usr/bin/ctags -L <(find . -name '*.py') --fields=+iaS --python-kinds=-i --sort=yes --extra=+q<cr>
+noremap <F1> <nop>
+noremap <F3> :set hlsearch! hlsearch?<CR>
+noremap <F6> :NERDTreeClose<CR>
+noremap <F7> :NERDTreeFind<CR> "TODO combine with F6 to make toggle
+noremap <F8> :TagbarToggle<cr>
+noremap <F9> :!/usr/bin/ctags -L <(find . -name '*.py') --fields=+iaS --python-kinds=-i --sort=yes --extra=+q<cr>
+
+" Double Shortcuts
+noremap tt :TagbarToggle<cr>
+" Vertical Split Window
+noremap <silent> vv <C-w>v
 
 " Leader shortcuts
-map <Leader>v :tabe ~/.vimrc<CR>
-map <Leader>e :tabe
-map <Leader>E :e <C-R>=expand('%:p:h') . '/'<CR>
-" open current buffer in new tab
-map <Leader>s :tab split<CR>
-map <Leader>n :tabnew<CR>
-map <Leader>Q :tabc<CR>
-map <Leader>m :tabm
-map <Leader>w :w<CR>
-map <Leader>q :q<CR>
-map <Leader>l :lclose<CR>
-map <Leader>L :lopen<CR>
-map <Leader>c :copen<CR>
-map <Leader>C :cclose<CR>
-map <Leader>z :cp<CR>
-map <Leader>x :cn<CR>
-" git diff in new tab
-map <Leader>f :tab split<CR>:Gdiff canon/master<CR>
-map <Leader>g :tab split<CR>:Ggrep
-" commit log for current file
-map <Leader>o :Glog -- %<CR>:copen<CR>
-map <Leader>i Oimport pdb; pdb.set_trace()<ESC>
-map <Leader>I Oimport pudb; pudb.set_trace()<ESC>
-" these are already set by Command-T, but let's be explicit
-map <Leader>t :CommandT<CR>
-map <Leader>b :CommandTBuffer<CR>
+
+" Fast Tab Switching!
+noremap <Leader>1 :tabnext 1<CR>
+noremap <Leader>2 :tabnext 2<CR>
+noremap <Leader>3 :tabnext 3<CR>
+noremap <Leader>4 :tabnext 4<CR>
+noremap <Leader>5 :tabnext 5<CR>
+noremap <Leader>6 :tabnext 6<CR>
+noremap <Leader>7 :tabnext 7<CR>
+noremap <Leader>8 :tabnext 8<CR>
+noremap <Leader>9 :tabnext 9<CR>
+
+" Quickly Open Vim, Bash/Tmux Settings!
+noremap <Leader>v :tabe ~/.vimrc<CR>
+noremap <Leader>V :tabe ~/.bash_profile<CR><Bar>:tabe ~/.tmux.conf<CR>
+
+noremap <Leader>e :tabe
+noremap <Leader>E :e <C-R>=expand('%:p:h') . '/'<CR>
+" Open current buffer in new tab.
+noremap <Leader>s :tab split<CR>
+noremap <Leader>n :tabnew<CR>
+noremap <Leader>Q :tabc<CR>
+noremap <Leader>m :tabm
+noremap <Leader>w :w<CR>
+noremap <Leader>q :q<CR>
+noremap <Leader>l :lclose<CR>
+noremap <Leader>L :lopen<CR>
+noremap <Leader>c :copen<CR>
+noremap <Leader>C :cclose<CR>
+noremap <Leader>z :cp<CR>
+noremap <Leader>x :cn<CR>
+" Git diff in new tab.
+noremap <Leader>f :tab split<CR>:Gdiff canon/master<CR>
+noremap <Leader>g :tab split<CR>:Ggrep
+" Commit log for current file.
+noremap <Leader>o :Glog -- %<CR>:copen<CR>
+noremap <Leader>i Oimport ipdb; ipdb.set_trace()<ESC>
+noremap <Leader>I Oimport pudb; pudb.set_trace()<ESC>
+" Open CommandT in new tab.
+noremap <Leader>T :tabnew<CR>:CommandT<CR>
+" Already set by Command-T, but let's be explicit.
+noremap <Leader>t :CommandT<CR>
+noremap <Leader>b :CommandTBuffer<CR>
+
+" Search Improvements
+noremap <Leader>y :let @/=expand("<cword>")<Bar>normal n<CR>
+noremap <Leader>Y :let @/=expand("<cword>")<Bar>split<Bar>normal n<CR>
+
+" Fold commands are usually z{char}, fixed!
+nnoremap z[ [z
+nnoremap z] ]z
+
+" Improved [I  -- Asks for line number of match to jump to.
+nnoremap <silent> [I [I:let nr = input("Item: ")<Bar>if nr != ''<Bar>exe "normal " . nr ."[\t"<Bar>endif<CR>
 
 " ---------- yelp stuff ---------
 
 if(match(hostname(), 'dev26') >= 0)
-	map <Leader>r :!cd ~/pg/yelp-main/templates && make && cd ~/pg/yelp-main/mobile_templates && make -f ../templates/Makefile<CR>
+	" Yelping in the desert.
+	colorscheme desert
+
 	set wildignore+=build/**,templates/*.py*,mobile_templates/*.py*,biz_templates/*.py*,admin_templates/*.py*,lite_templates/*.py*
 	autocmd BufEnter *.css.tmpl setlocal filetype=css
 	autocmd BufEnter *.js.tmpl setlocal filetype=javascript
+
+	noremap <Leader>m :!tools/db
+
+	" Wafit - Save, Waf, Reload Browser Tab.
+	noremap <Leader>r :write <Bar> !wafit<CR><CR>
 endif
