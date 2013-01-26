@@ -1,0 +1,7 @@
+Chaining together multiple bash scripts that normally cant be chained with |.
+
+:execute "!ls" | :execute "!echo hi" | ...
+
+" Currently selected: line #, line text:
+:echo line(".")
+:echo getline(".")
