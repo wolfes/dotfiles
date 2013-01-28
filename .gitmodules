@@ -31,3 +31,6 @@
 [submodule ".vim/bundle/vim-easymotion"]
 	path = .vim/bundle/vim-easymotion
 	url = git://github.com/Lokaltog/vim-easymotion.git
+[submodule ".vim/bundle/vimspire"]
+	path = .vim/bundle/vimspire
+	url = https://github.com/wolfes/vimspire.git
