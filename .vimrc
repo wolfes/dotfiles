@@ -60,33 +60,29 @@ set foldmethod=indent
 set foldnestmax=1
 
 augroup foldtype
+  "foldnestmax=(Py:2, JS:1), use foldmethod: marker -> indent.
+  autocmd BufReadPre *.py setlocal foldnestmax=2
+  autocmd BufReadPre *.js setlocal foldnestmax=1
   autocmd BufReadPre * setlocal foldmethod=marker
   autocmd BufReadPre * setlocal foldmethod=indent
-  "Set foldnestmax to 2 to fold classes and their functions in python.
-  autocmd BufReadPre *.py setlocal foldnestmax=2
 augroup END
 
-" Except HTML - 2 spaces
+" FILETYPE Autocmds
 augroup htmlLocal
+	" HTML - 2 spaces
 	autocmd BufWinEnter *.html setlocal tabstop=2
 	autocmd BufWinEnter *.html setlocal expandtab
 	autocmd BufWinEnter *.html setlocal shiftwidth=2
 augroup END
-
-" highlight trailing whitespace and non-tab indents
-augroup highlights
-	autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
-	autocmd BufWinEnter *.* match ExtraWhitespace /\s\+$/
-	autocmd BufWinLeave * call clearmatches()
-augroup END
-
-" Except JS - 2 spaces
 augroup jsLocal
+	" JS - 2 spaces
 	autocmd BufWinEnter *.js setlocal expandtab
 augroup END
-
-" Highlight trailing whitespace and non-tab indents.
+augroup makoLocal
+	autocmd BufEnter *.mako setlocal filetype=html
+augroup END
 augroup highlights
+	" Highlight trailing whitespace and non-tab indents.
 	autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 	autocmd BufWinEnter *.* match ExtraWhitespace /\s\+$/
 	autocmd BufWinLeave * call clearmatches()
@@ -150,11 +146,6 @@ set splitright
 
 " Tags - recursively check parent directories for tags file
 set tags+=./.tags,.tags,../.tags,../../.tags
-
-" Filetypes
-augroup makoLocal
-	autocmd BufEnter *.mako setlocal filetype=html
-augroup END
 
 " ---------- mappings ---------
 
