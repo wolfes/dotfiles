@@ -256,6 +256,7 @@ if(match(hostname(), 'dev26') >= 0)
 	set wildignore+=build/**,templates/*.py*,mobile_templates/*.py*,biz_templates/*.py*,admin_templates/*.py*,lite_templates/*.py*
 	autocmd BufEnter *.css.tmpl setlocal filetype=css
 	autocmd BufEnter *.js.tmpl setlocal filetype=javascript
+	autocmd BufEnter *.py setlocal filetype=python
 
 	noremap <Leader>m :!tools/db
 
