@@ -96,16 +96,16 @@ set guifont=Monaco:h12
 " Highlight current line
 set cursorline
 
-" Statusline
-set laststatus=2 " Show statusline even when there is a single window
-set statusline=%F%m%r%h%w%{fugitive#statusline()}
-set statusline+=[%l,%v][%p%%]
+" Show line numbers
+set number
 
 " Maintain more text around the cursor
 set scrolloff=3
 
-" Show line numbers
-set number
+" Statusline
+set laststatus=2 " Show statusline even when there is a single window
+set statusline=%F%m%r%h%w%{fugitive#statusline()}
+set statusline+=[%l,%v][%p%%]
 
 " More intelligent backspace and left/right movement
 set backspace=eol,start,indent
@@ -140,7 +140,7 @@ set backup
 set backupdir=~/.vim/backup
 set directory=~/.vim/tmp
 
-" set default split opening position to be below and to the right of currently active split
+" Default split opening position: down + right of active split.
 set splitbelow
 set splitright
 
