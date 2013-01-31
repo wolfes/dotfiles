@@ -39,18 +39,22 @@ endif
 let mapleader = ","
 set mouse=a
 
-" Filetype highlighting
+" Filetype Highlighting.
 filetype plugin indent on
 syntax on
 
-" Show what you are typing mid-command
+" Make Long Lines Obvious.
+highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+match OverLength /\%81v.\+/
+
+" Show what you are typing mid-command.
 set showcmd
 
-" Indentation/tabs
+" Indentation/Tabs
 set autoindent
 set noexpandtab " in python, use real tabs
 
-" 4 spaces by default
+" Tab => 4 spaces by default.
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -58,6 +62,7 @@ set shiftwidth=4
 " Fold Settings
 set foldmethod=indent
 set foldnestmax=1
+
 
 augroup foldtype
   "foldnestmax=(Py:2, JS:1), use foldmethod: marker -> indent.
@@ -208,12 +213,12 @@ noremap <Leader>Q :tabc<CR>
 noremap <Leader>m :tabm
 noremap <Leader>w :w<CR>
 noremap <Leader>q :q<CR>
-noremap <Leader>l :lclose<CR>
-noremap <Leader>L :lopen<CR>
-noremap <Leader>c :copen<CR>
-noremap <Leader>C :cclose<CR>
-noremap <Leader>z :cp<CR>
-noremap <Leader>x :cn<CR>
+"noremap <Leader>l :lclose<CR>
+"noremap <Leader>L :lopen<CR>
+"noremap <Leader>c :copen<CR>
+"noremap <Leader>C :cclose<CR>
+"noremap <Leader>z :cp<CR>
+"noremap <Leader>x :cn<CR>
 " Git diff in new tab.
 noremap <Leader>f :tab split<CR>:Gdiff canon/master<CR>
 noremap <Leader>g :tab split<CR>:Ggrep
