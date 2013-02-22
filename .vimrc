@@ -76,6 +76,9 @@ augroup htmlLocal
 augroup END
 augroup jsLocal
 	" JS - 2 spaces
+	autocmd BufWinEnter *.js setlocal tabstop=2
+	autocmd BufWinEnter *.js setlocal softtabstop=2
+	autocmd BufWinEnter *.js setlocal shiftwidth=2
 	autocmd BufWinEnter *.js setlocal expandtab
 augroup END
 augroup makoLocal
@@ -263,6 +266,12 @@ if(match(hostname(), 'dev26') >= 0)
 	colorscheme desert
 
 	set wildignore+=build/**,templates/*.py*,mobile_templates/*.py*,biz_templates/*.py*,admin_templates/*.py*,lite_templates/*.py*
+	augroup jsLocal
+		" JS - 4 spaces at Yelp.
+		autocmd BufWinEnter *.js setlocal tabstop=4
+		autocmd BufWinEnter *.js setlocal softtabstop=4
+		autocmd BufWinEnter *.js setlocal shiftwidth=4
+	augroup END
 	autocmd BufEnter *.css.tmpl setlocal filetype=css
 	autocmd BufEnter *.js.tmpl setlocal filetype=javascript
 	autocmd BufEnter *.py setlocal filetype=python
