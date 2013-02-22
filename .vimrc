@@ -12,7 +12,7 @@ let g:syntastic_auto_loc_list=1
 let g:syntastic_auto_jump=1
 
 " Tagbar
-let g:tagbar_width = 60
+let g:tagbar_width = 80
 let g:tagbar_sort = 0
 let g:tagbar_compact = 1
 let g:tagbar_autofocus = 1
@@ -43,10 +43,6 @@ set mouse=a
 filetype plugin indent on
 syntax on
 
-" Make Long Lines Obvious.
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-match OverLength /\%81v.\+/
-
 " Show what you are typing mid-command.
 set showcmd
 
@@ -62,7 +58,6 @@ set shiftwidth=4
 " Fold Settings
 set foldmethod=indent
 set foldnestmax=1
-
 
 augroup foldtype
   "foldnestmax=(Py:2, JS:1), use foldmethod: marker -> indent.
@@ -204,21 +199,34 @@ noremap <Leader>9 :tabnext 9<CR>
 noremap <Leader>v :tabe ~/.vimrc<CR>
 noremap <Leader>V :tabe ~/.bash_profile<CR><Bar>:tabe ~/.tmux.conf<CR>
 
+
+
+" Open New Tab.
+noremap <Leader>n :tabnew<CR>
+" Open New Tab with filename...
 noremap <Leader>e :tabe
-noremap <Leader>E :e <C-R>=expand('%:p:h') . '/'<CR>
+" Open New Tab with filename under cursor.
+noremap <Leader>E :tabe <cWORD><CR>
+""" noremap <Leader>E :e <C-R>=expand('%:p:h') . '/'<CR>
+
+" Yank Filepath of Current Buffer.
+noremap <Leader>F :let @" = expand("%")<CR>
+
 " Open current buffer in new tab.
 noremap <Leader>s :tab split<CR>
-noremap <Leader>n :tabnew<CR>
 noremap <Leader>Q :tabc<CR>
+" Move tab to index...
 noremap <Leader>m :tabm
 noremap <Leader>w :w<CR>
 noremap <Leader>q :q<CR>
+
 "noremap <Leader>l :lclose<CR>
 "noremap <Leader>L :lopen<CR>
 "noremap <Leader>c :copen<CR>
 "noremap <Leader>C :cclose<CR>
 "noremap <Leader>z :cp<CR>
 "noremap <Leader>x :cn<CR>
+
 " Git diff in new tab.
 noremap <Leader>f :tab split<CR>:Gdiff canon/master<CR>
 noremap <Leader>g :tab split<CR>:Ggrep
@@ -226,6 +234,7 @@ noremap <Leader>g :tab split<CR>:Ggrep
 noremap <Leader>o :Glog -- %<CR>:copen<CR>
 noremap <Leader>i Oimport ipdb; ipdb.set_trace()<ESC>
 noremap <Leader>I Oimport pudb; pudb.set_trace()<ESC>
+
 " Open CommandT in new tab.
 noremap <Leader>T :tabnew<CR>:CommandT<CR>
 " Already set by Command-T, but let's be explicit.
@@ -243,10 +252,14 @@ nnoremap z] ]z
 " Improved [I  -- Asks for line number of match to jump to.
 nnoremap <silent> [I [I:let nr = input("Item: ")<Bar>if nr != ''<Bar>exe "normal " . nr ."[\t"<Bar>endif<CR>
 
+
+highlight OverLength ctermbg=black ctermfg=white guibg=#592929
+match OverLength /\%81v.\+/
+
 " ---------- yelp stuff ---------
 
 if(match(hostname(), 'dev26') >= 0)
-	" Yelping in the desert.
+	" Yelping in the desert!
 	colorscheme desert
 
 	set wildignore+=build/**,templates/*.py*,mobile_templates/*.py*,biz_templates/*.py*,admin_templates/*.py*,lite_templates/*.py*
@@ -254,7 +267,7 @@ if(match(hostname(), 'dev26') >= 0)
 	autocmd BufEnter *.js.tmpl setlocal filetype=javascript
 	autocmd BufEnter *.py setlocal filetype=python
 
-	noremap <Leader>m :!tools/db
+	" noremap <Leader>m :!tools/db
 
 	" Wafit - Save, Waf, Reload Browser Tab.
 	noremap <Leader>r :write <Bar> !wafit<CR><CR>
