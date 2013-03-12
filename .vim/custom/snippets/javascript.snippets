@@ -74,6 +74,15 @@ snippet :f
 # setTimeout function
 snippet timeout
 	setTimeout(function() {${3}}${2}, ${1:10};
+
+## Context Methods
+
+# this.foo(bar);
+snippet this
+	this.${1:methodName}(${2});
+	${3}
+## DOM Methods
+
 # Get Elements
 snippet get
 	getElementsBy${1:TagName}('${2}')${3}

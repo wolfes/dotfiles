@@ -139,6 +139,11 @@ set splitright
 " Tags - recursively check parent directories for tags file
 set tags+=./.tags,.tags,../.tags,../../.tags
 
+" ---- Set Default Macros ----
+
+"NOTE: Filetype specific macros defined in ftplugin/filetypeNAME.vim
+
+
 " ---------- mappings ---------
 
 nnoremap - ddp
