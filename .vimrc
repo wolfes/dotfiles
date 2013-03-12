@@ -37,7 +37,7 @@ if filereadable($HOME . "/.vimrc.private")
     source $HOME/.vimrc.private
 endif
 
-" ---------- settings ---------
+" ---- Settings: MISC ---
 
 let mapleader = ","
 set mouse=a
@@ -139,12 +139,58 @@ set splitright
 " Tags - recursively check parent directories for tags file
 set tags+=./.tags,.tags,../.tags,../../.tags
 
+
+" ---- Settings: Speed Hacks ----
+
+" noesckeys makes all <ESC> prefixed keys fail in insert mode,
+" which is a good thing for arrow keys, but not sure about other effects.
+"set noesckeys
+"set ttimeout
+" Remove delay after hitting ESC from Insert mode.
+set ttimeoutlen=1
+
+
 " ---- Set Default Macros ----
 
 "NOTE: Filetype specific macros defined in ftplugin/filetypeNAME.vim
 
 
-" ---------- mappings ---------
+" ---- Mappings: Tab Management ----
+
+" Merge a tab into a split in the previous window.
+function! MergeTabs()
+	if tabpagenr() == 1
+		return
+	endif
+	let bufferName = bufname("%")
+	if tabpagenr("$") == tabpagenr()
+		close!
+	else
+		close!
+		tabprev
+	endif
+	split
+	execute "buffer " . bufferName
+endfunction
+
+function! ExtractBuffer()
+	let bufferName = bufname("%")
+	close!
+	tabnew
+	execute "buffer " . bufferName
+endfunction
+
+function! CloneBuffer()
+	let bufferName = bufname("%")
+	tabnew
+	execute "buffer " . bufferName
+endfunction
+
+nnoremap <C-W>m :call MergeTabs()<CR>
+nnoremap <C-W>e :call ExtractBuffer()<CR>
+nnoremap <C-W>c :call CloneBuffer()<CR>
+
+" ---- Mappings: MISC ----
 
 nnoremap - ddp
 nnoremap _ ddkP
@@ -182,6 +228,8 @@ noremap <silent> vv <C-w>v
 " Leader shortcuts
 
 " Fast Tab Switching!
+noremap <Leader>[ :tabprev<CR>
+noremap <Leader>] :tabnext<CR>
 noremap <Leader>1 :tabnext 1<CR>
 noremap <Leader>2 :tabnext 2<CR>
 noremap <Leader>3 :tabnext 3<CR>
@@ -191,6 +239,15 @@ noremap <Leader>6 :tabnext 6<CR>
 noremap <Leader>7 :tabnext 7<CR>
 noremap <Leader>8 :tabnext 8<CR>
 noremap <Leader>9 :tabnext 9<CR>
+noremap <Leader><Leader>1 :tabnext 10<CR>
+noremap <Leader><Leader>2 :tabnext 11<CR>
+noremap <Leader><Leader>3 :tabnext 12<CR>
+noremap <Leader><Leader>4 :tabnext 13<CR>
+noremap <Leader><Leader>5 :tabnext 14<CR>
+noremap <Leader><Leader>6 :tabnext 15<CR>
+noremap <Leader><Leader>7 :tabnext 16<CR>
+noremap <Leader><Leader>8 :tabnext 17<CR>
+noremap <Leader><Leader>9 :tabnext 18<CR>
 
 " Quickly Open Vim, Bash/Tmux Settings!
 noremap <Leader>v :tabe ~/.vimrc<CR>
@@ -198,11 +255,9 @@ noremap <Leader>V :tabe ~/.bash_profile<CR><Bar>:tabe ~/.tmux.conf<CR>
 
 
 
-" Open New Tab.
+" Open New Tab / with filename... / with filename under cursor.
 noremap <Leader>n :tabnew<CR>
-" Open New Tab with filename...
 noremap <Leader>e :tabe
-" Open New Tab with filename under cursor.
 noremap <Leader>E :tabe <cWORD><CR>
 """ noremap <Leader>E :e <C-R>=expand('%:p:h') . '/'<CR>
 
