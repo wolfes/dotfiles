@@ -23,6 +23,9 @@ if(filereadable(expand('~/.vim/plugin/ropevim.vim')))
 	let ropevim_extended_complete=1
 endif
 
+" Snipmate Options
+let g:snippets_dir = "~/.vim/custom/snippets"
+
 " Command-T
 let g:CommandTMaxFiles=999999
 
@@ -213,6 +216,7 @@ noremap <Leader>q :q<CR>
 "noremap <Leader>L :lopen<CR>
 "noremap <Leader>c :copen<CR>
 "noremap <Leader>C :cclose<CR>
+noremap <Leader>c :tabe ~/.vim/custom/snippets/javascript.snippets<CR>
 "noremap <Leader>z :cp<CR>
 "noremap <Leader>x :cn<CR>
 
