@@ -67,20 +67,6 @@ augroup foldtype
   autocmd BufReadPre * setlocal foldmethod=indent
 augroup END
 
-" FILETYPE Autocmds
-augroup htmlLocal
-	" HTML - 2 spaces
-	autocmd BufWinEnter *.html setlocal tabstop=2
-	autocmd BufWinEnter *.html setlocal expandtab
-	autocmd BufWinEnter *.html setlocal shiftwidth=2
-augroup END
-augroup jsLocal
-	" JS - 2 spaces
-	autocmd BufWinEnter *.js setlocal tabstop=2
-	autocmd BufWinEnter *.js setlocal softtabstop=2
-	autocmd BufWinEnter *.js setlocal shiftwidth=2
-	autocmd BufWinEnter *.js setlocal expandtab
-augroup END
 augroup makoLocal
 	autocmd BufEnter *.mako setlocal filetype=html
 augroup END
@@ -212,8 +198,8 @@ noremap <Leader>e :tabe
 noremap <Leader>E :tabe <cWORD><CR>
 """ noremap <Leader>E :e <C-R>=expand('%:p:h') . '/'<CR>
 
-" Yank Filepath of Current Buffer.
-noremap <Leader>F :let @" = expand("%")<CR>
+" Yank File Path of Current Buffer.
+noremap <Leader>P :let @" = expand("%")<CR>
 
 " Open current buffer in new tab.
 noremap <Leader>s :tab split<CR>
@@ -231,7 +217,7 @@ noremap <Leader>q :q<CR>
 "noremap <Leader>x :cn<CR>
 
 " Git diff in new tab.
-noremap <Leader>f :tab split<CR>:Gdiff canon/master<CR>
+"noremap <Leader>f :tab split<CR>:Gdiff canon/master<CR>
 noremap <Leader>g :tab split<CR>:Ggrep
 " Commit log for current file.
 noremap <Leader>o :Glog -- %<CR>:copen<CR>
@@ -265,19 +251,51 @@ if(match(hostname(), 'dev26') >= 0)
 	" Yelping in the desert!
 	colorscheme desert
 
+	" TF / PF for cWORD.
+	nnoremap <Leader>f :execute "!tf " . expand('<cword>') <cr>
+	nnoremap <Leader>F :execute "!pf " . expand('<cword>') <cr>
+
+	" Wafit - Save, Waf, Reload Browser Tab.
+	noremap <Leader>r :write <Bar> !wafit<CR><CR>
+
+
 	set wildignore+=build/**,templates/*.py*,mobile_templates/*.py*,biz_templates/*.py*,admin_templates/*.py*,lite_templates/*.py*
 	augroup jsLocal
 		" JS - 4 spaces at Yelp.
+		autocmd BufWinEnter *.js setlocal noexpandtab
 		autocmd BufWinEnter *.js setlocal tabstop=4
 		autocmd BufWinEnter *.js setlocal softtabstop=4
 		autocmd BufWinEnter *.js setlocal shiftwidth=4
 	augroup END
-	autocmd BufEnter *.css.tmpl setlocal filetype=css
-	autocmd BufEnter *.js.tmpl setlocal filetype=javascript
-	autocmd BufEnter *.py setlocal filetype=python
+	augroup templateType
+		autocmd BufEnter *.css.tmpl setlocal filetype=css
+		autocmd BufEnter *.js.tmpl setlocal filetype=javascript
+		autocmd BufEnter *.py setlocal filetype=python
+	augroup END
 
-	" noremap <Leader>m :!tools/db
+	" Use Tabs @ Yelp :(
+	set noexpandtab
+	set softtabstop=4
+	set tabstop=4
+	set shiftwidth=4
+endif
 
-	" Wafit - Save, Waf, Reload Browser Tab.
-	noremap <Leader>r :write <Bar> !wafit<CR><CR>
+if(match(hostname(), 'dev26') == -1)
+	" Not @ Yelp
+
+	" FILETYPE Autocmds
+	augroup htmlLocal
+		" HTML - 2 spaces
+		autocmd BufWinEnter *.html setlocal tabstop=2
+		autocmd BufWinEnter *.html setlocal expandtab
+		autocmd BufWinEnter *.html setlocal shiftwidth=2
+	augroup END
+	augroup jsLocal
+		" JS - 2 spaces
+		autocmd BufWinEnter *.js setlocal expandtab
+		autocmd BufWinEnter *.js setlocal tabstop=2
+		autocmd BufWinEnter *.js setlocal softtabstop=2
+		autocmd BufWinEnter *.js setlocal shiftwidth=2
+	augroup END
+
 endif
