@@ -3,6 +3,15 @@
 
 set nocompatible
 
+augroup MagicSourceOnSave
+	autocmd!
+	" Auto-Reload vimrc on save.
+	autocmd BufWritePost .vimrc source %
+	autocmd BufWritePost .bash_profile :execute "!source %"
+	autocmd BufWritePost .bashrc :execute "!source %"
+augroup END
+
+
 " ---------- plugins ---------
 
 call pathogen#infect()
@@ -37,14 +46,33 @@ if filereadable($HOME . "/.vimrc.private")
     source $HOME/.vimrc.private
 endif
 
-" ---- Settings: MISC ---
-
-let mapleader = ","
-set mouse=a
+" ---- Color Customization ----
 
 " Filetype Highlighting.
 filetype plugin indent on
 syntax on
+
+" Color scheme and font
+colorscheme xoria256
+colorscheme desert
+set guifont=Monaco:h12
+
+augroup highlights
+	" Highlight trailing whitespace and non-tab indents.
+	autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+	autocmd BufWinEnter *.* match ExtraWhitespace /\s\+$/
+	autocmd BufWinLeave * call clearmatches()
+augroup END
+
+highlight LineNr	ctermfg=darkgrey guifg=darkgrey
+highlight OverLength ctermbg=black ctermfg=white guibg=#592929
+match OverLength /\%81v.\+/
+
+
+" ---- Settings: MISC ---
+
+let mapleader = ","
+set mouse=a
 
 " Show what you are typing mid-command.
 set showcmd
@@ -73,28 +101,12 @@ augroup END
 augroup makoLocal
 	autocmd BufEnter *.mako setlocal filetype=html
 augroup END
-augroup highlights
-	" Highlight trailing whitespace and non-tab indents.
-	autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
-	autocmd BufWinEnter *.* match ExtraWhitespace /\s\+$/
-	autocmd BufWinLeave * call clearmatches()
-augroup END
 
-" Color scheme and font
-colorscheme xoria256
-colorscheme desert
-set guifont=Monaco:h12
+set cursorline		" Highlight current line
 
-" Highlight current line
-set cursorline
+set number			" Show line numbers.
+set scrolloff=3		" Show 3 lines above/below cursor, ie: zt & zb.
 
-" Show line numbers
-set number
-
-" Maintain more text around the cursor
-set scrolloff=3
-
-" Statusline
 set laststatus=2 " Show statusline even when there is a single window
 set statusline=%F%m%r%h%w%{fugitive#statusline()}
 set statusline+=[%l,%v][%p%%]
@@ -103,37 +115,28 @@ set statusline+=[%l,%v][%p%%]
 set backspace=eol,start,indent
 set whichwrap=b,s,h,l,<,>,[,]
 
-" Hidden buffer support
-set hidden
+set hidden			" Hidden buffer support.
 
-" Disable annoying messages, swap file already exists
-set autoread
-set shortmess+=IA
+set autoread		" Auto Read changes to file outside Vim.
+set shortmess+=IA	" Disable some messages.
 
-" Longer history
-set history=1000
+set history=1000	" Longer command history.
 
-" Case-smart searching (case-sensitive only if capital letter in search)
-set ignorecase
-set smartcase
-
-" Incremental search
-set incsearch
+set ignorecase		" Search ignores case,
+set smartcase		" unless search terms contains capitals.
+set incsearch		" Incremental search
 
 " Tab completion
 set wildmode=longest,list
 set wildignore=*.pyc
 
-" Visual bell instead of beep
-set visualbell
+set visualbell		" Visual Bell instead of beep.
 
-" keep backups and temp files in ~.vim/
-set backup
+set backup			" Keep backups/temp files.
 set backupdir=~/.vim/backup
 set directory=~/.vim/tmp
 
-" Default split opening position: down + right of active split.
-set splitbelow
+set splitbelow " Default split opens below & right of active split.
 set splitright
 
 " Tags - recursively check parent directories for tags file
@@ -146,8 +149,7 @@ set tags+=./.tags,.tags,../.tags,../../.tags
 " which is a good thing for arrow keys, but not sure about other effects.
 "set noesckeys
 "set ttimeout
-" Remove delay after hitting ESC from Insert mode.
-set ttimeoutlen=1
+set ttimeoutlen=1		" Make ESC finish fast.
 
 
 " ---- Set Default Macros ----
@@ -190,7 +192,63 @@ nnoremap <C-W>m :call MergeTabs()<CR>
 nnoremap <C-W>e :call ExtractBuffer()<CR>
 nnoremap <C-W>c :call CloneBuffer()<CR>
 
+" ---- Mappings: Split Management ----
+
+"function! MarkWindowSwap()
+"    let g:markedWinNum = winnr()
+"endfunction
+"
+"function! DoWindowSwap()
+"	"Mark destination
+"	let curNum = winnr()
+"	let curBuf = bufnr( "%" )
+"	exe g:markedWinNum . "wincmd w"
+"	"Switch to source and shuffle dest->source
+"	let markedBuf = bufnr( "%" )
+"	"Hide and open so that we aren't prompted and keep history
+"	exe 'hide buf' curBuf
+"	"Switch to dest and shuffle source->dest
+"	exe curNum . "wincmd w"
+"	"Hide and open so that we aren't prompted and keep history
+"	exe 'hide buf' markedBuf
+"endfunction
+"
+"" Mark window to move (source), then mark window to swap (destination).
+"nnoremap <Leader>ms :call MarkWindowSwap()<CR>
+"nnoremap <Leader>md :call DoWindowSwap()<CR>
+
+function! MarkWindowSwap()
+	" marked window number
+	let g:markedWinNum = winnr()
+	let g:markedBufNum = bufnr("%")
+endfunction
+
+function! DoWindowSwap()
+	let curWinNum = winnr()
+	let curBufNum = bufnr("%")
+	" Switch focus to marked window
+	exe g:markedWinNum . "wincmd w"
+
+	" Load current buffer on marked window
+	exe 'hide buf' curBufNum
+
+	" Switch focus to current window
+	exe curWinNum . "wincmd w"
+
+	" Load marked buffer on
+	" current window
+	exe 'hide buf' g:markedBufNum
+endfunction
+
+nnoremap H :call MarkWindowSwap()<CR><C-w>h :call DoWindowSwap()<CR>
+nnoremap J :call MarkWindowSwap()<CR><C-w>j :call DoWindowSwap()<CR>
+nnoremap K :call MarkWindowSwap()<CR><C-w>k :call DoWindowSwap()<CR>
+nnoremap L :call MarkWindowSwap()<CR><C-w>l :call DoWindowSwap()<CR>
+
+
 " ---- Mappings: MISC ----
+
+inoremap <C-j> <ESC>
 
 nnoremap - ddp
 nnoremap _ ddkP
@@ -253,8 +311,6 @@ noremap <Leader><Leader>9 :tabnext 18<CR>
 noremap <Leader>v :tabe ~/.vimrc<CR>
 noremap <Leader>V :tabe ~/.bash_profile<CR><Bar>:tabe ~/.tmux.conf<CR>
 
-
-
 " Open New Tab / with filename... / with filename under cursor.
 noremap <Leader>n :tabnew<CR>
 noremap <Leader>e :tabe
@@ -288,8 +344,11 @@ noremap <Leader>o :Glog -- %<CR>:copen<CR>
 noremap <Leader>i Oimport ipdb; ipdb.set_trace()<ESC>
 noremap <Leader>I Oimport pudb; pudb.set_trace()<ESC>
 
-" Open CommandT in new tab.
+" Open CommandT in new tab / split / vsplit.
 noremap <Leader>T :tabnew<CR>:CommandT<CR>
+noremap <Leader>ts :split<CR>:CommandT<CR>
+noremap <Leader>tv :vsplit<CR>:CommandT<CR>
+
 " Already set by Command-T, but let's be explicit.
 noremap <Leader>t :CommandT<CR>
 noremap <Leader>b :CommandTBuffer<CR>
@@ -305,9 +364,6 @@ nnoremap z] ]z
 " Improved [I  -- Asks for line number of match to jump to.
 nnoremap <silent> [I [I:let nr = input("Item: ")<Bar>if nr != ''<Bar>exe "normal " . nr ."[\t"<Bar>endif<CR>
 
-
-highlight OverLength ctermbg=black ctermfg=white guibg=#592929
-match OverLength /\%81v.\+/
 
 " ---------- yelp stuff ---------
 
@@ -339,8 +395,8 @@ if(match(hostname(), 'dev26') >= 0)
 
 	" Use Tabs @ Yelp :(
 	set noexpandtab
-	set softtabstop=4
 	set tabstop=4
+	set softtabstop=4
 	set shiftwidth=4
 endif
 
