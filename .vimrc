@@ -3,7 +3,7 @@
 
 set nocompatible
 
-augroup MagicSourceOnSave
+augroup SourceOnSave
 	autocmd!
 	" Auto-Reload vimrc on save.
 	autocmd BufWritePost .vimrc source %
@@ -64,36 +64,30 @@ augroup highlights
 	autocmd BufWinLeave * call clearmatches()
 augroup END
 
-highlight LineNr	ctermfg=darkgrey guifg=darkgrey
-highlight OverLength ctermbg=black ctermfg=white guibg=#592929
-match OverLength /\%81v.\+/
-
 
 " ---- Settings: MISC ---
 
-let mapleader = ","
-set mouse=a
+let mapleader = ","	" The <Leader> binding.
+set mouse=a			" Enabled for all modes.
 
-" Show what you are typing mid-command.
-set showcmd
-
-" Indentation/Tabs
-set autoindent
-set noexpandtab " in python, use real tabs
+set showcmd			" Show (partial) cmd in last line of screen.
+set autoindent		" Copy indent from curr line when creating new line.
 
 " Tab => 4 spaces by default.
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
+set noexpandtab
 
 " Fold Settings
 set foldmethod=indent
 set foldnestmax=1
 
 augroup foldtype
-  "foldnestmax=(Py:2, JS:1), use foldmethod: marker -> indent.
+  "foldnestmax=(Py:2, JS:1).
   autocmd BufReadPre *.py setlocal foldnestmax=2
   autocmd BufReadPre *.js setlocal foldnestmax=1
+  " Fold markers, then use indent folding.
   autocmd BufReadPre * setlocal foldmethod=marker
   autocmd BufReadPre * setlocal foldmethod=indent
 augroup END
@@ -103,7 +97,6 @@ augroup makoLocal
 augroup END
 
 set cursorline		" Highlight current line
-
 set number			" Show line numbers.
 set scrolloff=3		" Show 3 lines above/below cursor, ie: zt & zb.
 
@@ -134,9 +127,8 @@ set visualbell		" Visual Bell instead of beep.
 
 set backup			" Keep backups/temp files.
 set backupdir=~/.vim/backup
-set directory=~/.vim/tmp
 
-set splitbelow " Default split opens below & right of active split.
+"set splitbelow " Default split opens below & right of active split.
 set splitright
 
 " Tags - recursively check parent directories for tags file
@@ -154,7 +146,7 @@ set ttimeoutlen=1		" Make ESC finish fast.
 
 " ---- Set Default Macros ----
 
-"NOTE: Filetype specific macros defined in ftplugin/filetypeNAME.vim
+" NOTE: Filetype specific macros defined in ftplugin/filetypeNAME.vim
 
 
 " ---- Mappings: Tab Management ----
@@ -246,6 +238,68 @@ nnoremap K :call MarkWindowSwap()<CR><C-w>k :call DoWindowSwap()<CR>
 nnoremap L :call MarkWindowSwap()<CR><C-w>l :call DoWindowSwap()<CR>
 
 
+" ---- Mappings: Tabs ----
+
+" Fast Tab Switching.
+noremap <Leader>[ :tabprev<CR>
+noremap <Leader>] :tabnext<CR>
+noremap <Leader>1 :tabnext 1<CR>
+noremap <Leader>2 :tabnext 2<CR>
+noremap <Leader>3 :tabnext 3<CR>
+noremap <Leader>4 :tabnext 4<CR>
+noremap <Leader>5 :tabnext 5<CR>
+noremap <Leader>6 :tabnext 6<CR>
+noremap <Leader>7 :tabnext 7<CR>
+noremap <Leader>8 :tabnext 8<CR>
+noremap <Leader>9 :tabnext 9<CR>
+noremap <Leader><Leader>1 :tabnext 10<CR>
+noremap <Leader><Leader>2 :tabnext 11<CR>
+noremap <Leader><Leader>3 :tabnext 12<CR>
+noremap <Leader><Leader>4 :tabnext 13<CR>
+noremap <Leader><Leader>5 :tabnext 14<CR>
+noremap <Leader><Leader>6 :tabnext 15<CR>
+noremap <Leader><Leader>7 :tabnext 16<CR>
+noremap <Leader><Leader>8 :tabnext 17<CR>
+noremap <Leader><Leader>9 :tabnext 18<CR>
+
+" Open CommandT in new tab / split / vsplit.
+noremap <Leader>T :tabnew<CR>:CommandT<CR>
+noremap <Leader>ts :split<CR>:CommandT<CR>
+noremap <Leader>tv :vsplit<CR>:CommandT<CR>
+
+" Already set by Command-T, but let's be explicit.
+noremap <Leader>t :CommandT<CR>
+noremap <Leader>b :CommandTBuffer<CR>
+
+" Open New Tab / with filename... / with filename under cursor.
+noremap <Leader>n :tabnew<CR>
+noremap <Leader>e :tabe
+noremap <Leader>E :tabe <cWORD><CR>
+""" noremap <Leader>E :e <C-R>=expand('%:p:h') . '/'<CR>
+
+" Open current buffer in new tab.
+noremap <Leader>s :tab split<CR>
+noremap <Leader>Q :tabc<CR>
+
+" Move tab to index...
+noremap <Leader>m :tabm
+
+
+" ---- Mappings: Open Specific Files ----
+
+" Quickly Open Vim, Bash/Tmux Settings!
+noremap <Leader>v :tabe ~/.vimrc<CR>
+noremap <Leader>V :tabe ~/.bash_profile<CR><Bar>:tabe ~/.tmux.conf<CR>
+
+noremap <Leader>c :tabe ~/.vim/custom/snippets/javascript.snippets<CR>
+
+
+" ---- Mappings: Plug-Ins ----
+
+" Double Shortcuts
+noremap tt :TagbarToggle<cr>
+
+
 " ---- Mappings: MISC ----
 
 inoremap <C-j> <ESC>
@@ -278,53 +332,12 @@ noremap <F7> :NERDTreeFind<CR> "TODO combine with F6 to make toggle
 noremap <F8> :TagbarToggle<cr>
 noremap <F9> :!/usr/bin/ctags -L <(find . -name '*.py') --fields=+iaS --python-kinds=-i --sort=yes --extra=+q<cr>
 
-" Double Shortcuts
-noremap tt :TagbarToggle<cr>
 " Vertical Split Window
 noremap <silent> vv <C-w>v
-
-" Leader shortcuts
-
-" Fast Tab Switching!
-noremap <Leader>[ :tabprev<CR>
-noremap <Leader>] :tabnext<CR>
-noremap <Leader>1 :tabnext 1<CR>
-noremap <Leader>2 :tabnext 2<CR>
-noremap <Leader>3 :tabnext 3<CR>
-noremap <Leader>4 :tabnext 4<CR>
-noremap <Leader>5 :tabnext 5<CR>
-noremap <Leader>6 :tabnext 6<CR>
-noremap <Leader>7 :tabnext 7<CR>
-noremap <Leader>8 :tabnext 8<CR>
-noremap <Leader>9 :tabnext 9<CR>
-noremap <Leader><Leader>1 :tabnext 10<CR>
-noremap <Leader><Leader>2 :tabnext 11<CR>
-noremap <Leader><Leader>3 :tabnext 12<CR>
-noremap <Leader><Leader>4 :tabnext 13<CR>
-noremap <Leader><Leader>5 :tabnext 14<CR>
-noremap <Leader><Leader>6 :tabnext 15<CR>
-noremap <Leader><Leader>7 :tabnext 16<CR>
-noremap <Leader><Leader>8 :tabnext 17<CR>
-noremap <Leader><Leader>9 :tabnext 18<CR>
-
-" Quickly Open Vim, Bash/Tmux Settings!
-noremap <Leader>v :tabe ~/.vimrc<CR>
-noremap <Leader>V :tabe ~/.bash_profile<CR><Bar>:tabe ~/.tmux.conf<CR>
-
-" Open New Tab / with filename... / with filename under cursor.
-noremap <Leader>n :tabnew<CR>
-noremap <Leader>e :tabe
-noremap <Leader>E :tabe <cWORD><CR>
-""" noremap <Leader>E :e <C-R>=expand('%:p:h') . '/'<CR>
 
 " Yank File Path of Current Buffer.
 noremap <Leader>P :let @" = expand("%")<CR>
 
-" Open current buffer in new tab.
-noremap <Leader>s :tab split<CR>
-noremap <Leader>Q :tabc<CR>
-" Move tab to index...
-noremap <Leader>m :tabm
 noremap <Leader>w :w<CR>
 noremap <Leader>q :q<CR>
 
@@ -332,7 +345,6 @@ noremap <Leader>q :q<CR>
 "noremap <Leader>L :lopen<CR>
 "noremap <Leader>c :copen<CR>
 "noremap <Leader>C :cclose<CR>
-noremap <Leader>c :tabe ~/.vim/custom/snippets/javascript.snippets<CR>
 "noremap <Leader>z :cp<CR>
 "noremap <Leader>x :cn<CR>
 
@@ -343,15 +355,6 @@ noremap <Leader>g :tab split<CR>:Ggrep
 noremap <Leader>o :Glog -- %<CR>:copen<CR>
 noremap <Leader>i Oimport ipdb; ipdb.set_trace()<ESC>
 noremap <Leader>I Oimport pudb; pudb.set_trace()<ESC>
-
-" Open CommandT in new tab / split / vsplit.
-noremap <Leader>T :tabnew<CR>:CommandT<CR>
-noremap <Leader>ts :split<CR>:CommandT<CR>
-noremap <Leader>tv :vsplit<CR>:CommandT<CR>
-
-" Already set by Command-T, but let's be explicit.
-noremap <Leader>t :CommandT<CR>
-noremap <Leader>b :CommandTBuffer<CR>
 
 " Search Improvements
 noremap <Leader>y :let @/=expand("<cword>")<Bar>normal n<CR>
@@ -398,6 +401,7 @@ if(match(hostname(), 'dev26') >= 0)
 	set tabstop=4
 	set softtabstop=4
 	set shiftwidth=4
+
 endif
 
 if(match(hostname(), 'dev26') == -1)
