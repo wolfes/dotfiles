@@ -18,7 +18,6 @@ call pathogen#infect()
 
 " Snipmate v2.0
 " Snipmate Options
-let g:snippets_dir = "~/.vim/custom/snippets"
 
 " Syntastic
 let g:syntastic_auto_loc_list=1
@@ -96,13 +95,11 @@ set foldnestmax=1
 augroup foldtype
   "foldnestmax=(Py:2, JS:1).
   autocmd BufReadPre *.py setlocal foldnestmax=2
-  autocmd BufReadPre *.snippets setlocal foldnestmax=2
   autocmd BufReadPre *.js setlocal foldnestmax=1
   autocmd BufReadPre *.tmpl setlocal foldnestmax=1
   " Fold markers, then use indent folding.
   autocmd BufReadPre * setlocal foldmethod=marker
   autocmd BufReadPre * setlocal foldmethod=indent
-  autocmd BufReadPre *.snippets setlocal foldmethod=marker
 augroup END
 
 augroup makoLocal
