@@ -12,9 +12,13 @@ augroup SourceOnSave
 augroup END
 
 
-" ---------- plugins ---------
+" ---- Plugin Setup ----
 
 call pathogen#infect()
+
+" Snipmate v2.0
+" Snipmate Options
+let g:snippets_dir = "~/.vim/custom/snippets"
 
 " Syntastic
 let g:syntastic_auto_loc_list=1
@@ -28,12 +32,10 @@ let g:tagbar_autofocus = 1
 
 " Ropevim
 if(filereadable(expand('~/.vim/plugin/ropevim.vim')))
-	let ropevim_vim_completion=1 "Replace vim's complete function with ropevim
+	"Replace vim's complete function with ropevim
+	let ropevim_vim_completion=1 
 	let ropevim_extended_complete=1
 endif
-
-" Snipmate Options
-let g:snippets_dir = "~/.vim/custom/snippets"
 
 " Command-T
 let g:CommandTMaxFiles=999999
@@ -46,11 +48,12 @@ if filereadable($HOME . "/.vimrc.private")
     source $HOME/.vimrc.private
 endif
 
-" ---- Color Customization ----
+let $XIKI_DIR = "/Library/Ruby/Gems/1.8/gems/xiki-0.6.5/etc/vim"
+if filereadable($XIKI_DIR . "/etc/vim/xiki.vim")
+	source $XIKI_DIR/etc/vim/xiki.vim
+endif
 
-" Filetype Highlighting.
-filetype plugin indent on
-syntax on
+" ---- Color Customization ----
 
 " Color scheme and font
 colorscheme xoria256
@@ -69,6 +72,14 @@ augroup END
 
 let mapleader = ","	" The <Leader> binding.
 set mouse=a			" Enabled for all modes.
+"
+" Filetype Highlighting.
+filetype plugin indent on
+syntax on
+
+highlight LineNr	ctermfg=darkgrey guifg=darkgrey
+highlight OverLength ctermbg=black ctermfg=white guibg=#592929
+match OverLength /\%81v.\+/
 
 set showcmd			" Show (partial) cmd in last line of screen.
 set autoindent		" Copy indent from curr line when creating new line.
@@ -146,7 +157,7 @@ set tags+=./.tags,.tags,../.tags,../../.tags
 set ttimeoutlen=1		" Make ESC finish fast.
 
 
-" ---- Set Default Macros ----
+" ---- Defaults: Macros ----
 
 " NOTE: Filetype specific macros defined in ftplugin/filetypeNAME.vim
 
@@ -369,6 +380,11 @@ nnoremap z] ]z
 " Improved [I  -- Asks for line number of match to jump to.
 nnoremap <silent> [I [I:let nr = input("Item: ")<Bar>if nr != ''<Bar>exe "normal " . nr ."[\t"<Bar>endif<CR>
 
+
+" ---------- Markdown -----------
+
+noremap <Leader><Leader>m :!pandoc -s -S --toc README.md -c http://localhost/md6.css -o README.html && open README.html<CR><CR>
+noremap <Leader><Leader>m :!pandoc -s -S --toc README.md -c http://localhost/swiss.css -o README.html && open README.html<CR><CR>
 
 " ---------- yelp stuff ---------
 
