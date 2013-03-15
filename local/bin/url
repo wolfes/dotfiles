@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source ~/.tabspire_id.sh
+
+#curl -F "url=$line" http://cmdsync.com:3000/api/0/tabspire/$TABSPIRE_CLIENT_ID/openURL;
+while read line; do curl -F "url=$line" http://cmdsync.com:3000/api/0/tabspire/$TABSPIRE_CLIENT_ID/openURL; done
