@@ -16,7 +16,9 @@ augroup END
 
 call pathogen#infect()
 
+" Vim-Powerline
 set rtp+=expand('~/.vim/bundle/powerline/powerline/bindings/vim')
+let g:Powerline_symbols = 'fancy'
 
 " Snipmate v2.0
 " Snipmate Options
