@@ -16,6 +16,8 @@ augroup END
 
 call pathogen#infect()
 
+set rtp+=expand('~/.vim/bundle/powerline/powerline/bindings/vim')
+
 " Snipmate v2.0
 " Snipmate Options
 
