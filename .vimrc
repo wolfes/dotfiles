@@ -2,6 +2,7 @@
 " Many thanks to: mwilson and Buck.
 
 set nocompatible
+set encoding=utf8
 
 augroup SourceOnSave
 	autocmd!
@@ -14,7 +15,9 @@ augroup END
 
 " ---- Plugin Setup ----
 
+" Load All Bundles with Pathogen.
 call pathogen#infect()
+call pathogen#helptags()
 
 " Vim-Powerline
 set rtp+=expand('~/.vim/bundle/powerline/powerline/bindings/vim')
@@ -59,33 +62,70 @@ endif
 " ---- Color Customization ----
 
 " Color scheme and font
+"set background=light
+"set background=dark
 colorscheme xoria256
 colorscheme desert
-set guifont=Monaco:h12
+"set guifont=Monaco:h12
 
 augroup highlights
 	" Highlight trailing whitespace and non-tab indents.
 	autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 	autocmd BufWinEnter *.* match ExtraWhitespace /\s\+$/
 	autocmd BufWinLeave * call clearmatches()
+
+	autocmd ColorScheme * highlight LineNr ctermfg=darkgrey guifg=darkgrey
+	autocmd ColorScheme * highlight OverLength ctermbg=black ctermfg=white guibg=#592929
+	autocmd BufWinEnter * match OverLength /\%81v.\+/
 augroup END
 
 
 " ---- Settings: MISC ---
 
-let mapleader = ","	" The <Leader> binding.
-set mouse=a			" Enabled for all modes.
-"
 " Filetype Highlighting.
 filetype plugin indent on
 syntax on
 
-highlight LineNr	ctermfg=darkgrey guifg=darkgrey
-highlight OverLength ctermbg=black ctermfg=white guibg=#592929
-match OverLength /\%81v.\+/
+let mapleader = ","	" The <Leader> binding.
+set mouse=a			" Enabled for all modes.
 
+" Style
 set showcmd			" Show (partial) cmd in last line of screen.
 set autoindent		" Copy indent from curr line when creating new line.
+set number			" Show line numbers.
+set cursorline		" Highlight current line
+set scrolloff=3		" Show 3 lines above/below cursor, ie: zt & zb.
+" Style - Search
+set ignorecase		" Search ignores case,
+set smartcase		" unless search terms contains capitals.
+set incsearch		" Incremental search
+" Style - Splits
+set splitbelow " Default split opens below & right of active split.
+set splitright
+" Style - Status Line
+set laststatus=2	" Show statusline even when there is a single window
+set statusline=%F%m%r%h%w%{fugitive#statusline()}
+set statusline+=[%l,%v][%p%%]
+set shortmess+=IA	" Disable some messages.
+
+" More intelligent backspace and left/right movement
+set backspace=eol,start,indent
+set whichwrap=b,s,h,l,<,>,[,]
+
+set hidden			" Hidden buffer support.
+set autoread		" Auto Read changes to file outside Vim.
+set history=1000	" Longer command history.
+set visualbell		" Visual Bell instead of beep.
+
+" Tab completion
+set wildmode=longest,list
+set wildignore=*.pyc
+
+set backup			" Keep backups/temp files.
+set backupdir=~/.vim/backup
+
+" Tags - recursively check parent directories for tags file
+set tags+=./.tags,.tags,../.tags,../../.tags
 
 " Tab => 4 spaces by default.
 set tabstop=4
@@ -109,44 +149,6 @@ augroup END
 augroup makoLocal
 	autocmd BufEnter *.mako setlocal filetype=html
 augroup END
-
-set cursorline		" Highlight current line
-set number			" Show line numbers.
-set scrolloff=3		" Show 3 lines above/below cursor, ie: zt & zb.
-
-set laststatus=2 " Show statusline even when there is a single window
-set statusline=%F%m%r%h%w%{fugitive#statusline()}
-set statusline+=[%l,%v][%p%%]
-
-" More intelligent backspace and left/right movement
-set backspace=eol,start,indent
-set whichwrap=b,s,h,l,<,>,[,]
-
-set hidden			" Hidden buffer support.
-
-set autoread		" Auto Read changes to file outside Vim.
-set shortmess+=IA	" Disable some messages.
-
-set history=1000	" Longer command history.
-
-set ignorecase		" Search ignores case,
-set smartcase		" unless search terms contains capitals.
-set incsearch		" Incremental search
-
-" Tab completion
-set wildmode=longest,list
-set wildignore=*.pyc
-
-set visualbell		" Visual Bell instead of beep.
-
-set backup			" Keep backups/temp files.
-set backupdir=~/.vim/backup
-
-set splitbelow " Default split opens below & right of active split.
-set splitright
-
-" Tags - recursively check parent directories for tags file
-set tags+=./.tags,.tags,../.tags,../../.tags
 
 
 " ---- Settings: Speed Hacks ----
