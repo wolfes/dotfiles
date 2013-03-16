@@ -40,9 +40,6 @@
 [submodule ".vim/bundle/vim-snipmate"]
 	path = .vim/bundle/vim-snipmate
 	url = git://github.com/garbas/vim-snipmate.git
-[submodule ".vim/bundle/powerline"]
-	path = .vim/bundle/powerline
-	url = git://github.com/Lokaltog/powerline.git
 [submodule ".vim/bundle/vim-powerline"]
 	path = .vim/bundle/vim-powerline
 	url = git://github.com/Lokaltog/vim-powerline.git
