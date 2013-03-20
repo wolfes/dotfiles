@@ -467,4 +467,6 @@ if(match(hostname(), 'dev26') == -1)
 		autocmd BufWinEnter *.js setlocal shiftwidth=2
 	augroup END
 
+	set expandtab
+
 endif
