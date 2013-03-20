@@ -26,6 +26,10 @@ call pathogen#helptags()
 set rtp+=expand('~/.vim/bundle/powerline/powerline/bindings/vim')
 let g:Powerline_symbols = 'fancy'
 
+" CtrlP Max Files
+let g:ctrlp_max_files = 50000
+let g:ctrlp_working_path_mode = 0
+
 " Snipmate v2.0
 " Snipmate Options
 
@@ -34,10 +38,11 @@ let g:syntastic_auto_loc_list=1
 let g:syntastic_auto_jump=1
 
 " Tagbar
-let g:tagbar_width = 80
-let g:tagbar_sort = 0
-let g:tagbar_compact = 1
-let g:tagbar_autofocus = 1
+let g:tagbar_width=80		" Make Tagbar window 80 chars wide.
+let g:tagbar_sort=0			" Sort tags by file location.
+let g:tagbar_compact=1		" Omit help and blank lines in window.
+let g:tagbar_autofocus=1	" Move focus to Tagbar window.
+let g:tagbar_autoclose=1	" Close Tagbar window on selection.
 
 " Ropevim
 if(filereadable(expand('~/.vim/plugin/ropevim.vim')))
@@ -123,7 +128,7 @@ set wildignore=*.pyc
 set ignorecase		" Search ignores case,
 set smartcase		" unless search terms contains capitals.
 set incsearch		" Incremental search
-
+40, 30
 " Input => Mouse
 set mouse=a			" Enabled for all modes.
 " Input => Tab Char
@@ -168,7 +173,6 @@ augroup END
 augroup makoLocal
 	autocmd BufEnter *.mako setlocal filetype=html
 augroup END
-
 
 " ---- Settings: Speed Hacks ----
 
