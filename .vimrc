@@ -102,7 +102,6 @@ filetype plugin indent on
 syntax on
 
 let mapleader = ","	" The <Leader> binding.
-set mouse=a			" Enabled for all modes.
 
 " Backups
 set noswapfile		" No Swap Files.
@@ -112,48 +111,49 @@ set backup			" Keep backups/temp files.
 set backupdir=~/.vim/backup
 
 " Style
-set showcmd			" Show (partial) cmd in last line of screen.
 set visualbell		" Visual Bell instead of beep.
-set noshowmode		" Hide default mode text (eg: -- INSERT --) for powerline.
-set autoindent		" Copy indent from curr line when creating new line.
 set number			" Show line numbers.
 set cursorline		" Highlight current line
 set scrolloff=3		" Show 3 lines above/below cursor, ie: zt & zb.
-" Style - Tab completion
+" Style => Tab completion
 set wildmenu		" Enhanced Tab Completion for wildmode.
 set wildmode=longest:list
 set wildignore=*.pyc
-" Search
+" Style => Search
 set ignorecase		" Search ignores case,
 set smartcase		" unless search terms contains capitals.
 set incsearch		" Incremental search
-" Splits
-set splitbelow		" Horizontal splits go below current window.
-set splitright		" Vertical splits go right of current window.
-" Status Line
-set laststatus=2	" Show statusline even when there is a single window
-set statusline=%F%m%r%h%w%{fugitive#statusline()}
-set statusline+=[%l,%v][%p%%]
-set shortmess+=IA	" Disable some messages.
-" Keys - Tab Char
+
+" Input => Mouse
+set mouse=a			" Enabled for all modes.
+" Input => Tab Char
+set autoindent		" Copy indent from curr line when creating new line.
 set tabstop=4		" Tab counts for 4 spaces.
 set softtabstop=4	" == tabstop ? Prevent forest fires : mix tab+spaces.
 set shiftwidth=4	" Shift text 4 spaces.
 set nosmarttab		" Use tabstop for all tabbing.
 set noexpandtab		" Don't expand tabs to spaces.
-" Keys - Backspace & Left/Right Movement
+" Input => Backspace & Left/Right Movement
 set backspace=eol,start,indent
 set whichwrap=b,s,h,l,<,>,[,]
 
+" Status Line
+set showcmd			" Show (partial) cmd in last line of screen.
+set noshowmode		" Hide default mode text (eg: -- INSERT --) for powerline.
+set laststatus=2	" Show statusline even when there is a single window
+set statusline=%F%m%r%h%w%{fugitive#statusline()}
+set statusline+=[%l,%v][%p%%]
+set shortmess+=IA	" Disable some messages.
+set history=1000	" Longer command history.
+" Buffer Management
 set hidden			" Hidden buffer support.
 set autoread		" Auto Read changes to file outside Vim.
-set history=1000	" Longer command history.
-
-" Tags - recursively check parent directories for tags file
+set splitbelow		" Horizontal splits go below current window.
+set splitright		" Vertical splits go right of current window.
+" Tags				" Recursively check parent directories for tags file.
 set tags+=./.tags,.tags,../.tags,../../.tags
-
-" Fold Settings
-set foldnestmax=1
+" MISC
+set foldnestmax=1	" Set maximum fold level depth.
 
 augroup foldtype
   "foldnestmax=(Py:2, JS:1).
@@ -182,6 +182,11 @@ set ttimeoutlen=1		" Make ESC finish fast.
 " ---- Defaults: Macros ----
 
 " NOTE: Filetype specific macros defined in ftplugin/filetypeNAME.vim
+
+
+" Example: Javascript prototype.
+" Copy last prototype signature, placing you in insert mode at end.
+let @p="?.*prototype.* =yW''pdbi"
 
 
 " ---- Mappings: Tab Management ----
@@ -326,7 +331,7 @@ noremap <Leader>m :tabm
 noremap <Leader>v :tabe ~/.vimrc<CR>
 noremap <Leader>V :tabe ~/.bash_profile<CR><Bar>:tabe ~/.tmux.conf<CR>
 
-noremap <Leader>C :tabe ~/.vim/custom/snippets/javascript.snippets<CR>
+noremap <Leader>C :tabe ~/.vim/bundle/custom-snippets/snippets/javascript.snippets<CR>
 
 
 " ---- Mappings: Plug-Ins ----
