@@ -12,6 +12,9 @@ augroup SourceOnSave
 	autocmd BufWritePost .bashrc :execute "!source %"
 augroup END
 
+augroup FixColorSchemeOnSourceVimrc
+	autocmd BufWritePost .vimrc doautocmd ColorScheme .vimrc
+augroup END
 
 " ---- Plugin Setup ----
 
@@ -19,7 +22,7 @@ augroup END
 call pathogen#infect()
 call pathogen#helptags()
 
-" Vim-Powerline
+" Vim-Powerline.
 set rtp+=expand('~/.vim/bundle/powerline/powerline/bindings/vim')
 let g:Powerline_symbols = 'fancy'
 
@@ -39,7 +42,7 @@ let g:tagbar_autofocus = 1
 " Ropevim
 if(filereadable(expand('~/.vim/plugin/ropevim.vim')))
 	"Replace vim's complete function with ropevim
-	let ropevim_vim_completion=1 
+	let ropevim_vim_completion=1
 	let ropevim_extended_complete=1
 endif
 
@@ -66,7 +69,6 @@ endif
 "set background=dark
 colorscheme xoria256
 colorscheme desert
-"set guifont=Monaco:h12
 
 augroup highlights
 	" Highlight trailing whitespace and non-tab indents.
@@ -74,9 +76,22 @@ augroup highlights
 	autocmd BufWinEnter *.* match ExtraWhitespace /\s\+$/
 	autocmd BufWinLeave * call clearmatches()
 
+	" Show extra whitespace
+	hi ExtraWhitespace guibg=#666666
+	hi ExtraWhitespace ctermbg=7
+	match ExtraWhitespace /\s\+$/
+	autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+	autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+	autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+	autocmd BufWinLeave * call clearmatches()
+
+	" Put line numbers more in the background visually.
 	autocmd ColorScheme * highlight LineNr ctermfg=darkgrey guifg=darkgrey
+	" Highlight part of lines longer than 80 characters, like this one.
 	autocmd ColorScheme * highlight OverLength ctermbg=black ctermfg=white guibg=#592929
 	autocmd BufWinEnter * match OverLength /\%81v.\+/
+	autocmd InsertEnter * match OverLength /\%81v.\+/
+	autocmd InsertLeave * match OverLength /\%81v.\+/
 augroup END
 
 
@@ -89,49 +104,53 @@ syntax on
 let mapleader = ","	" The <Leader> binding.
 set mouse=a			" Enabled for all modes.
 
+" Backups
+set noswapfile		" No Swap Files.
+set nowritebackup	" No Backup Files.
+set undodir=~/.vim/tmp/undo/	" Store persistent Undo files.
+set backup			" Keep backups/temp files.
+set backupdir=~/.vim/backup
+
 " Style
 set showcmd			" Show (partial) cmd in last line of screen.
+set visualbell		" Visual Bell instead of beep.
+set noshowmode		" Hide default mode text (eg: -- INSERT --) for powerline.
 set autoindent		" Copy indent from curr line when creating new line.
 set number			" Show line numbers.
 set cursorline		" Highlight current line
 set scrolloff=3		" Show 3 lines above/below cursor, ie: zt & zb.
-" Style - Search
+" Style - Tab completion
+set wildmenu		" Enhanced Tab Completion for wildmode.
+set wildmode=longest:list
+set wildignore=*.pyc
+" Search
 set ignorecase		" Search ignores case,
 set smartcase		" unless search terms contains capitals.
 set incsearch		" Incremental search
-" Style - Splits
-set splitbelow " Default split opens below & right of active split.
-set splitright
-" Style - Status Line
+" Splits
+set splitbelow		" Horizontal splits go below current window.
+set splitright		" Vertical splits go right of current window.
+" Status Line
 set laststatus=2	" Show statusline even when there is a single window
 set statusline=%F%m%r%h%w%{fugitive#statusline()}
 set statusline+=[%l,%v][%p%%]
 set shortmess+=IA	" Disable some messages.
-
-" More intelligent backspace and left/right movement
+" Keys - Tab Char
+set tabstop=4		" Tab counts for 4 spaces.
+set softtabstop=4	" == tabstop ? Prevent forest fires : mix tab+spaces.
+set shiftwidth=4	" Shift text 4 spaces.
+set nosmarttab		" Use tabstop for all tabbing.
+set noexpandtab		" Don't expand tabs to spaces.
+" Keys - Backspace & Left/Right Movement
 set backspace=eol,start,indent
 set whichwrap=b,s,h,l,<,>,[,]
 
 set hidden			" Hidden buffer support.
 set autoread		" Auto Read changes to file outside Vim.
 set history=1000	" Longer command history.
-set visualbell		" Visual Bell instead of beep.
-
-" Tab completion
-set wildmode=longest,list
-set wildignore=*.pyc
-
-set backup			" Keep backups/temp files.
-set backupdir=~/.vim/backup
 
 " Tags - recursively check parent directories for tags file
 set tags+=./.tags,.tags,../.tags,../../.tags
-
-" Tab => 4 spaces by default.
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set noexpandtab
 
 " Fold Settings
 set foldnestmax=1
@@ -307,7 +326,7 @@ noremap <Leader>m :tabm
 noremap <Leader>v :tabe ~/.vimrc<CR>
 noremap <Leader>V :tabe ~/.bash_profile<CR><Bar>:tabe ~/.tmux.conf<CR>
 
-noremap <Leader>c :tabe ~/.vim/custom/snippets/javascript.snippets<CR>
+noremap <Leader>C :tabe ~/.vim/custom/snippets/javascript.snippets<CR>
 
 
 " ---- Mappings: Plug-Ins ----
@@ -395,9 +414,9 @@ if(match(hostname(), 'dev26') >= 0)
 	" Yelping in the desert!
 	colorscheme desert
 
-	" TF / PF for cWORD.
-	nnoremap <Leader>f :execute "!tf " . expand('<cword>') <cr>
-	nnoremap <Leader>F :execute "!pf " . expand('<cword>') <cr>
+	" TF / PF for cword.
+	nnoremap <Leader>tf :execute "!tf " . expand('<cword>') <cr>
+	nnoremap <Leader>pf :execute "!pf " . expand('<cword>') <cr>
 
 	" Wafit - Save, Waf, Reload Browser Tab.
 	noremap <Leader>r :write <Bar> !wafit<CR><CR>
