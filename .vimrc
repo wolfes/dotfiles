@@ -94,9 +94,9 @@ augroup highlights
 	autocmd ColorScheme * highlight LineNr ctermfg=darkgrey guifg=darkgrey
 	" Highlight part of lines longer than 80 characters, like this one.
 	autocmd ColorScheme * highlight OverLength ctermbg=black ctermfg=white guibg=#592929
-	autocmd BufWinEnter * match OverLength /\%81v.\+/
-	autocmd InsertEnter * match OverLength /\%81v.\+/
-	autocmd InsertLeave * match OverLength /\%81v.\+/
+	autocmd BufWinEnter * match OverLength /\%91v.\+/
+	autocmd InsertEnter * match OverLength /\%91v.\+/
+	autocmd InsertLeave * match OverLength /\%91v.\+/
 augroup END
 
 
@@ -396,6 +396,7 @@ noremap <Leader>q :q<CR>
 "noremap <Leader>f :tab split<CR>:Gdiff canon/master<CR>
 noremap <Leader>g :tab split<CR>:Ggrep
 " Commit log for current file.
+noremap <Leader>g :Gblame<CR>
 noremap <Leader>o :Glog -- %<CR>:copen<CR>
 noremap <Leader>i Oimport ipdb; ipdb.set_trace()<ESC>
 noremap <Leader>I Oimport pudb; pudb.set_trace()<ESC>
