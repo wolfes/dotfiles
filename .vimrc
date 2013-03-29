@@ -67,14 +67,6 @@ if filereadable($XIKI_DIR . "/etc/vim/xiki.vim")
 	source $XIKI_DIR/etc/vim/xiki.vim
 endif
 
-" Rainbow_Parenthesis
-augroup RainbowParens
-	au Syntax * RainbowParenthesesToggle
-	au Syntax * RainbowParenthesesLoadRound
-	au Syntax * RainbowParenthesesLoadSquare
-	au Syntax * RainbowParenthesesLoadBraces
-augroup END
-
 let g:clojure_fuzzy_indent = 1
 let g:clojure_fuzzy_indent_patterns = ['^with', '^def', '^let', '^fact$']
 let g:clojure_fuzzy_indent_blacklist = ['^with-meta$', '-fn$']
@@ -442,6 +434,8 @@ if(match(hostname(), 'dev26') >= 0)
 
 	" Wafit - Save, Waf, Reload Browser Tab.
 	noremap <Leader>r :write <Bar> !wafit<CR><CR>
+	" MMit - Save, mm, Reload Browser Tab.
+	noremap <Leader>R :write <Bar> !mmit<CR><CR>
 
 
 	set wildignore+=build/**,templates/*.py*,mobile_templates/*.py*,biz_templates/*.py*,admin_templates/*.py*,lite_templates/*.py*

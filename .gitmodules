@@ -64,3 +64,6 @@
 [submodule ".vim/bundle/rainbow_parentheses"]
 	path = .vim/bundle/rainbow_parentheses
 	url = git://github.com/kien/rainbow_parentheses.vim.git
+[submodule ".vim/bundle/VimClosure"]
+	path = .vim/bundle/VimClosure
+	url = git://github.com/vim-scripts/VimClojure.git
