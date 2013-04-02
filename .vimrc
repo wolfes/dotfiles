@@ -192,10 +192,10 @@ set ttimeoutlen=1		" Make ESC finish fast.
 " NOTE: Filetype specific macros defined in ftplugin/filetypeNAME.vim
 
 
-" Example: Javascript prototype.
 " Copy last prototype signature, placing you in insert mode at end.
 let @p="?.*prototype.* =yW''pdbi"
-
+" Wrap plain text on current line in console.log call.
+let @l="^iconsole.log('$a');"
 
 " ---- Mappings: Tab Management ----
 
@@ -427,6 +427,15 @@ noremap <Leader><Leader>m :!pandoc -s -S --toc README.md -c http://localhost/swi
 if(match(hostname(), 'dev26') >= 0)
 	" Yelping in the desert!
 	colorscheme desert
+
+	"set t_Co=256
+	"Solarized color scheme
+	"(https://github.com/altercation/vim-colors-solarized)
+	"let g:solarized_termcolors=256
+	"let g:solarized_visibility = "low" "Could be low, normal or high
+	"let g:solarized_contrast = "high"
+	"set background=dark
+	"colorscheme solarized
 
 	" TF / PF for cword.
 	nnoremap <Leader>tf :execute "!tf " . expand('<cword>') <cr>
