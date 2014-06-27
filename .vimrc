@@ -6,7 +6,7 @@ set encoding=utf8
 
 augroup SourceOnSave
 	autocmd!
-	" Auto-Reload vimrc on save.
+	" Auto-Source vimrc, bash_profile, and bashrc after save.
 	autocmd BufWritePost .vimrc source %
 	autocmd BufWritePost .bash_profile :execute "!source %"
 	autocmd BufWritePost .bashrc :execute "!source %"
@@ -97,10 +97,10 @@ augroup highlights
 	" Put line numbers more in the background visually.
 	autocmd ColorScheme * highlight LineNr ctermfg=darkgrey guifg=darkgrey
 	" Highlight part of lines longer than 80 characters, like this one.
-	autocmd ColorScheme * highlight OverLength ctermbg=black ctermfg=white guibg=#592929
-	autocmd BufWinEnter * match OverLength /\%91v.\+/
-	autocmd InsertEnter * match OverLength /\%91v.\+/
-	autocmd InsertLeave * match OverLength /\%91v.\+/
+	"autocmd ColorScheme * highlight OverLength ctermbg=black ctermfg=white guibg=#592929
+	"autocmd BufWinEnter * match OverLength /\%91v.\+/
+	"autocmd InsertEnter * match OverLength /\%91v.\+/
+	"autocmd InsertLeave * match OverLength /\%91v.\+/
 augroup END
 
 
@@ -141,7 +141,7 @@ set tabstop=4		" Tab counts for 4 spaces.
 set softtabstop=4	" == tabstop ? Prevent forest fires : mix tab+spaces.
 set shiftwidth=4	" Shift text 4 spaces.
 set nosmarttab		" Use tabstop for all tabbing.
-set noexpandtab		" Don't expand tabs to spaces.
+set expandtab		" Expand tabs to spaces.
 " Input => Backspace & Left/Right Movement
 set backspace=eol,start,indent
 set whichwrap=b,s,h,l,<,>,[,]
@@ -340,6 +340,7 @@ noremap <Leader>v :tabe ~/.vimrc<CR>
 noremap <Leader>V :tabe ~/.bash_profile<CR><Bar>:tabe ~/.tmux.conf<CR>
 
 noremap <Leader>C :tabe ~/.vim/bundle/custom-snippets/snippets/javascript.snippets<CR>
+noremap <Leader>p :tabe ~/.vim/bundle/custom-snippets/snippets/python.snippets<CR>
 
 
 " ---- Mappings: Plug-Ins ----
@@ -355,6 +356,9 @@ inoremap <C-j> <ESC>
 nnoremap - ddp
 nnoremap _ ddkP
 nnoremap <Space> i_<Esc>r
+" Index ctags for project in current dir.
+noremap <Leader>ct :!ctags -R .<CR>
+
 
 " Source .vimrc / .bash_profile
 nnoremap <Leader>sv :so $MYVIMRC<CR>
@@ -415,7 +419,10 @@ nnoremap z] ]z
 
 " Improved [I  -- Asks for line number of match to jump to.
 nnoremap <silent> [I [I:let nr = input("Item: ")<Bar>if nr != ''<Bar>exe "normal " . nr ."[\t"<Bar>endif<CR>
+nnoremap <silent> <Leader>f [I:let nr = input("Item: ")<Bar>if nr != ''<Bar>exe "normal " . nr ."[\t"<Bar>endif<CR>
 
+nnoremap <Leader>z :tabp<CR>
+nnoremap <Leader>m :tabn<CR>
 
 " ---------- Markdown -----------
 
@@ -424,7 +431,7 @@ noremap <Leader><Leader>m :!pandoc -s -S --toc README.md -c http://localhost/swi
 
 " ---------- yelp stuff ---------
 
-if(match(hostname(), 'dev26') >= 0)
+if(match(hostname(), 'dev11-devc') >= 0)
 	" Yelping in the desert!
 	colorscheme desert
 
@@ -442,15 +449,15 @@ if(match(hostname(), 'dev26') >= 0)
 	nnoremap <Leader>pf :execute "!pf " . expand('<cword>') <cr>
 
 	" Wafit - Save, Waf, Reload Browser Tab.
-	noremap <Leader>r :write <Bar> !wafit<CR><CR>
+	noremap <Leader>R :write <Bar> !wafit<CR><CR>
 	" MMit - Save, mm, Reload Browser Tab.
-	noremap <Leader>R :write <Bar> !mmit<CR><CR>
+	noremap <Leader>r :write <Bar> !mmit<CR><CR>
 
 
 	set wildignore+=build/**,templates/*.py*,mobile_templates/*.py*,biz_templates/*.py*,admin_templates/*.py*,lite_templates/*.py*
 	augroup jsLocal
 		" JS - 4 spaces at Yelp.
-		autocmd BufWinEnter *.js setlocal noexpandtab
+		autocmd BufWinEnter *.js setlocal expandtab
 		autocmd BufWinEnter *.js setlocal tabstop=4
 		autocmd BufWinEnter *.js setlocal softtabstop=4
 		autocmd BufWinEnter *.js setlocal shiftwidth=4
@@ -462,14 +469,14 @@ if(match(hostname(), 'dev26') >= 0)
 	augroup END
 
 	" Use Tabs @ Yelp :(
-	set noexpandtab
+	set expandtab
 	set tabstop=4
 	set softtabstop=4
 	set shiftwidth=4
 
 endif
 
-if(match(hostname(), 'dev26') == -1)
+if(match(hostname(), 'dev11-devc') == -1)
 	" Not @ Yelp
 
 	" FILETYPE Autocmds
